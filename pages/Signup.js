@@ -1,7 +1,13 @@
+import nextConfig from "../next.config";
 import { useState } from 'react';
 import css from 'styled-jsx/css';
+import Axios from "axios";
+import Link from "next/link";
+import { useRouter } from 'next/router'
 
 const Signup = () => {
+
+    const router = useRouter()
 
     const [Checkname, setCheckname] = useState(true);
     const [Checknumber, setChecknumber] = useState(true);
@@ -57,7 +63,7 @@ const Signup = () => {
     const handleChangePass = (e)=>{
         setUpass(e);
         let pass1 = e;
-        if (!pass1.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,20}$/)) {
+        if (!pass1.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/)) {
             setCheckvalidpass(false);
         } else {
             setCheckvalidpass(true);
@@ -76,13 +82,52 @@ const Signup = () => {
     }
 
 
-    const handleSubmit=()=>{
-        handleChangeName(Username);
-        handleChangePnumber(Pnumber);
-        handleChangeEmail(Usermail);
-        handleChangePass(Upass);
-        handleChangeconfirmpass(Confirmpass);
+    const handleSubmit= async(e)=>{
+        await handleChangeName(Username);
+        await handleChangePnumber(Pnumber);
+        await handleChangeEmail(Usermail);
+        await handleChangePass(Upass);
+        await handleChangeconfirmpass(Confirmpass);
+
+        if(Username!="" && Checkname && Checknumber && Checkvalidmail && Checkvalidpass && Checkconfirmpass){
+            senddatatoapi(e);
+        }
     }
+
+    const senddatatoapi= async(e)=>{
+
+        let jsondata = await JSON.stringify({
+                "userName":Username.toString(),
+                "MobileNo":Pnumber.toString(),
+                "Email":Usermail.toString(),
+                "Password":Upass.toString()
+        })
+
+       await Axios.post(`${nextConfig.REST_API_URL}/createaccount`, jsondata , 
+        {headers: {
+            // Overwrite Axios's automatically set Content-Type
+            'Content-Type': 'application/json'
+          }})
+          
+          .then((response)=>{
+            if (response.status==200) {
+                let result = response;
+                console.log(result.data.result);
+                alert(result.data.message);
+                e.preventDefault();
+                router.push("/Login");
+               } else {
+                console.log("http error : ", response.data)
+            }
+
+
+          }).catch((err)=>{
+              console.log(err.response.data.error);
+              alert(err.response.data.error);
+          });
+         
+    }
+
 
     return (
 
@@ -90,7 +135,9 @@ const Signup = () => {
             <div id="main">
                 <div>
 
-                    <form method="POST" className="reg-form" id="container">
+                    {/* <form method="POST" className="reg-form" id="container"> */}
+                    <div className="reg-form" id="container">
+                        
                         <h2>Create Account</h2>
 
                         <div className="input-fields">
@@ -114,7 +161,7 @@ const Signup = () => {
                         <div className="input-fields">
                             <input type="password" value={Upass} onChange={(e)=>{handleChangePass(e.target.value)}} onBlur={(e)=>handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
                             <div className="invalid-field"></div>
-                            {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one Upper character, one Lower character, one Digit and one symbol</div>) : null}
+                            {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
@@ -124,8 +171,13 @@ const Signup = () => {
 
                         </div>
 
-                        <input onClick={handleSubmit} type="submit" className="btn btn-primary reg-btn" name="submit" value="Sign up" />
-                    </form>
+                        {/* <input onClick={handleSubmit} type="submit" className="btn btn-primary reg-btn" name="submit" value="Sign up" /> */}
+                        <button onClick={(e)=>{handleSubmit(e)}} className="btn btn-primary reg-btn">Sign up</button>
+                    
+                        </div>
+
+                    {/* </form> */}
+
                 </div>
             </div>
 
