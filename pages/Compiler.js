@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import cookie from 'cookie';
 import Checkauth from '../Modules/checkAuth';
+import axios from 'axios';
 
 export async function getServerSideProps(context) {
   const data = await Checkauth(context.req.headers.cookie);
@@ -36,8 +37,32 @@ function Compiler({ data }) {
                   'Content-Type': 'application/json',
                 },
               })
-    
-              console.log("Your Response is : ", response.data.output);
+              console.log("Your Response is : ", response.data);
+
+              
+              
+
+              //###########  For Get the Output 
+              let intervalId =  setInterval(async() => {
+                const {data:dataRes} = await axios.get(`${nextConfig.REST_API_URL}/status`, {params:{id:response.data.jobId}})
+                const {success, job, error} = dataRes;
+
+                console.log(dataRes)
+
+              if(success){
+                const {status : jobStatus, output: jobOutput} = job;
+                if(jobStatus==="pending") return;                
+                clearInterval(intervalId)
+              }else{
+                console.error(error);
+                clearInterval(intervalId)
+              }
+
+              }, 1000);
+
+
+
+
           } catch (error) {
               console.log(error.response)
           } 
