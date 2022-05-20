@@ -195,7 +195,7 @@ const stylesheet = css`
     justify-content: center;
     background-image: url("background.jpg"); 
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 100% 100%;    
 }
 
 #container{
