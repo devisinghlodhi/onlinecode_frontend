@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 
+
 export default function Login() {
   
   const router = useRouter()
@@ -66,9 +67,13 @@ export default function Login() {
         if (response.status == 200) {
           console.log(response.data.result);
           Cookies.set('token', response.data.token)
-          alert(response.data.message);
+          // alert(response.data.message);
           e.preventDefault();
           // router.push("/");
+          console.log(response.data);
+          if(response.data.result == 'success'){
+            router.push('/Compiler')
+          }
         }
       }).catch((err) => {
         console.log(err.response.data.error);

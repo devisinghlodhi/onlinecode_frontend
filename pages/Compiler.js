@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react';
 
 import nextConfig from '../next.config';
 import css from 'styled-jsx/css';
-import Axios from "axios";
 import Link from "next/link";
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import cookie from 'cookie';
 import Checkauth from '../Modules/checkAuth';
@@ -16,9 +15,20 @@ import AceEditor from '../Components/AceEditor';
 // const AceEditor = dynamic(import('react-ace'), { ssr: false });  //import without server side rendering
 // import AceEditor from 'react-ace-editor';
 
-export async function getServerSideProps(context) {
-  const data = await Checkauth(context.req.headers.cookie);
-  return { props: { data } }
+// export async function getServerSideProps(context) {
+//   const data = await Checkauth(context.req.headers.cookie);    
+//   return { props: { data } }
+// }
+
+
+function Codestatus(Jobstatus){
+  if(Jobstatus.Jobstatus == 'pending'){
+    return ( <> <h5 style={styles.status_blue} >{Jobstatus.Jobstatus}</h5> </>  )  
+  }else if(Jobstatus.Jobstatus == 'success'){
+    return ( <> <h5 style={styles.status_green} >{Jobstatus.Jobstatus}</h5> </>  )
+  }else{
+     return ( <> <h5 style={styles.status_red} >{Jobstatus.Jobstatus}</h5> </>  )
+  }
 }
 
 
@@ -30,6 +40,10 @@ function Compiler({ data }) {
   const [Jobstatus, setJobstatus] = useState("");
   const [Joboutput, setJoboutput] = useState("");
 
+
+
+  
+
   const handleSubmit = async () => {
     console.log(Language)
     let codedata = await JSON.stringify({
@@ -39,7 +53,8 @@ function Compiler({ data }) {
 
     try {
       //###########  For Send the code to server -------------------------------------------------------------
-      let response = await Axios.post(`${nextConfig.REST_API_URL}/run`, codedata,
+      let response = await axios.post(`${nextConfig.REST_API_URL}/run`, codedata,
+      // let response = await axios.post('/api/run', codedata,
         { headers: { 'Content-Type': 'application/json' } })
       console.log("Your Response is : ", response.data);
       setJobstatus("pending");
@@ -53,7 +68,7 @@ function Compiler({ data }) {
         console.log(dataRes)
         if (success) {
           const { status: jobStatus, output: jobOutput } = job;
-
+          
           setJobstatus(jobStatus);
           // var obj = JSON.parse(jobOutput);
           // var pretty = JSON.stringify(obj, undefined, 4);
@@ -90,11 +105,13 @@ function Compiler({ data }) {
   }
 
   const handleOnload = () => {
-    console.log("this is onload");
+    // console.log("this is onload");
   }
 
   return (
+    
     <>
+
     <div id="main">
       <h1 style={{ textAlign: 'center', fontFamily:'Algerian', fontWeight:'600' , paddingTop:15}}>CODE COMPILER</h1>
 
@@ -140,19 +157,25 @@ function Compiler({ data }) {
                 showLineNumbers: true,
                 tabSize: 2,
               }} />
+              
           </div>
 
           {/* output widnow  */}
 
           <div style={styles.outputwindow}>
-            <div style={{ height: '5%', display: 'flex' }}>
-              <h5>Status : </h5>
-              <h5 style={{marginLeft:10}}>{Jobstatus}</h5>              
+            <div style={{ height: '5%', display: 'flex' , justifyContent:'space-between'}}>
+            <h5 style={{fontWeight:'bold'}}>Output : - </h5>
+              <div  style={{width:200, display:'flex'}}>
+              <h5 style={{fontWeight:'bold'}} >Status : </h5>
+              {/* <h5 style={{marginLeft:10}} className={mystyles.status_yellow}>{Jobstatus}</h5> */}
+             
+             <Codestatus Jobstatus={Jobstatus} />
+
+              </div>
             </div>
 
-            <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>
               <hr />
-              <h5>Output : </h5>
+            <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>              
               <textarea value={Joboutput} name="output" id="output" readOnly style={styles.outputtext}></textarea>
             </div>
 
@@ -174,6 +197,22 @@ export default Compiler;
 
 
 var styles = {
+
+  status_green:{
+    color: '#00cc00',
+    marginLeft:10,
+},
+
+status_red:{
+    color:'red',
+    marginLeft:10,
+},
+
+status_blue:{
+    color:'#4168f8f7',
+    marginLeft:10,
+},
+
   outputtext: {
     "border": "none",
     "overflow": "auto",
