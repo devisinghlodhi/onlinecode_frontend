@@ -1,5 +1,5 @@
 
-import { NextRequest } from 'next/server'
+import { NextRequest } from 'next/server';
 import { NextResponse } from "next/server";
 import nextConfig from '../next.config';
 
@@ -16,7 +16,13 @@ async function checkValidLogin(req){
                 body: JSON.stringify({ token: req.cookies["token"] })
             });
 
-            data = await response.json();
+            let response_data = await response.json();
+
+            if(response_data.status == 'success'){
+                data = { login: "success", error: "Login Expired" }
+            }else{
+                data = { login: "failed", error: "Login Expired" };    
+            }
 
         } catch (error) {
             console.log("api error:", error)
@@ -25,7 +31,6 @@ async function checkValidLogin(req){
 
         return data;
 }
-
 
 
 export default async function middleware(req) {
@@ -46,6 +51,8 @@ export default async function middleware(req) {
         
         let LoginData = await checkValidLogin(req);
         
+        console.log(LoginData);
+
         if(LoginData.login != 'success'){
             const { pathname, origin } = req.nextUrl          
             console.log('hii')                    

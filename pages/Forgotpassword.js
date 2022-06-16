@@ -7,15 +7,13 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 
 
-export default function Login() {
+export default function Forgotpassword() {
   
   const router = useRouter()
 
   const [Checkvalidmail, setCheckvalidmail] = useState(true);
-  const [Checkvalidpass, setCheckvalidpass] = useState(true);
 
   const [Usermail, setUsermail] = useState('');
-  const [Upass, setUpass] = useState('');
 
   const handleChangeEmail = (e) => {
     setUsermail(e);
@@ -30,33 +28,23 @@ export default function Login() {
     }
   }
 
-  const handleChangePass = (e) => {
-    setUpass(e);
-    let pass1 = e;
-    if (!pass1.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/)) {
-      setCheckvalidpass(false);
-    } else {
-      setCheckvalidpass(true);
-    }
-  }
 
-  const handleLogin = async (e) => {
+  const handleForgot = async (e) => {
     await handleChangeEmail(Usermail);
-    await handleChangePass(Upass);
-
-    if (Usermail != '' && Checkvalidmail && Checkvalidpass) {
-      loginwithapi(e);
+    
+    if (Usermail != '' && Checkvalidmail) {
+        sendforgotlinkwithapi(e);
     }
   }
 
 
-  const loginwithapi = async (e) => {
+  const sendforgotlinkwithapi = async (e) => {
     let jsondata = await JSON.stringify({
-      "Email": Usermail.toString(),
-      "Password": Upass.toString()
+        "hosturl":"http://localhost:3000/forgotpass",
+        "email": Usermail.toString(),    
     })
 
-    await Axios.post(`${nextConfig.REST_API_URL}/login`, jsondata,
+    await Axios.post(`${nextConfig.REST_API_URL}/forgot`, jsondata,
       {
         headers: {
           // Overwrite Axios's automatically set Content-Type
@@ -66,14 +54,17 @@ export default function Login() {
       .then((response) => {
         if (response.status == 200) {
           console.log(response.data.result);
-          Cookies.set('token', response.data.token)
-          // alert(response.data.message);
+        //   Cookies.set('eamil_token', response.data.token)
+          
+
+
+
           e.preventDefault();
           // router.push("/");
           console.log(response.data);
-          if(response.data.result == 'success'){
-            router.push('/Compiler')
-          }
+        //   if(response.data.result == 'success'){
+        //     router.push('/Compiler')
+        //   }
         }
       }).catch((err) => {
         console.log(err.response.data.error);
@@ -87,7 +78,7 @@ export default function Login() {
         <div>
           {/* <form method="POST" className="login-form" id="container"> */}
           <div className="login-form" id="container">
-            <h2 className="formtitle">Login Page</h2>
+            <h2 className="formtitle">Forgot Password</h2>
 
             <div className="input-fields">
               <input type="email" onChange={(e) => { handleChangeEmail(e.target.value) }} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
@@ -95,22 +86,18 @@ export default function Login() {
               {!Checkvalidmail ? (<div className="invalid-field">Invalid email</div>) : null}
             </div>
 
-            <div className="input-fields">
-              <input type="password" onChange={(e) => { handleChangePass(e.target.value) }} onBlur={(e) => { handleChangePass(e.target.value) }} className="password inputbox" placeholder="Enter Your Password" required>
-              </input>
-              {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
-            </div>
+        
             <div className="hlink">
               <Link href="/Signup">
                 <a>Create an account?</a>
               </Link>
-              <Link href="/Forgotpassword">
-                <a href="#">Forgot Passowrd?</a>
+              <Link href="/Login">
+                <a href="#">Login</a>
               </Link>
             </div>
             {/* <input type="submit" className={`btn btn-primary login-btn`} name="submit" value="Login" /> */}
 
-            <button onClick={(e) => { handleLogin(e) }} className={`btn btn-primary login-btn`}>Login</button>
+            <button onClick={(e) => { handleForgot(e) }} className={`btn btn-primary login-btn`}>Send Link on Email</button>
           </div>
           {/* </form> */}
         </div>
