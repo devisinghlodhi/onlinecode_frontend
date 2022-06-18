@@ -6,6 +6,7 @@ import css from 'styled-jsx/css';
 import Link from "next/link";
 import Router, { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 import cookie from 'cookie';
 import Checkauth from '../Modules/checkAuth';
 import axios from 'axios';
@@ -21,13 +22,13 @@ import AceEditor from '../Components/AceEditor';
 // }
 
 
-function Codestatus(Jobstatus){
-  if(Jobstatus.Jobstatus == 'pending'){
-    return ( <> <h5 style={styles.status_blue} >{Jobstatus.Jobstatus}</h5> </>  )  
-  }else if(Jobstatus.Jobstatus == 'success'){
-    return ( <> <h5 style={styles.status_green} >{Jobstatus.Jobstatus}</h5> </>  )
-  }else{
-     return ( <> <h5 style={styles.status_red} >{Jobstatus.Jobstatus}</h5> </>  )
+function Codestatus(Jobstatus) {
+  if (Jobstatus.Jobstatus == 'pending') {
+    return (<> <h5 style={styles.status_blue} >{Jobstatus.Jobstatus}</h5> </>)
+  } else if (Jobstatus.Jobstatus == 'success') {
+    return (<> <h5 style={styles.status_green} >{Jobstatus.Jobstatus}</h5> </>)
+  } else {
+    return (<> <h5 style={styles.status_red} >{Jobstatus.Jobstatus}</h5> </>)
   }
 }
 
@@ -42,7 +43,7 @@ function Compiler({ data }) {
 
 
 
-  
+
 
   const handleSubmit = async () => {
     console.log(Language)
@@ -54,7 +55,7 @@ function Compiler({ data }) {
     try {
       //###########  For Send the code to server -------------------------------------------------------------
       let response = await axios.post(`${nextConfig.REST_API_URL}/run`, codedata,
-      // let response = await axios.post('/api/run', codedata,
+        // let response = await axios.post('/api/run', codedata,
         { headers: { 'Content-Type': 'application/json' } })
       console.log("Your Response is : ", response.data);
       setJobstatus("pending");
@@ -68,7 +69,7 @@ function Compiler({ data }) {
         console.log(dataRes)
         if (success) {
           const { status: jobStatus, output: jobOutput } = job;
-          
+
           setJobstatus(jobStatus);
           // var obj = JSON.parse(jobOutput);
           // var pretty = JSON.stringify(obj, undefined, 4);
@@ -87,6 +88,64 @@ function Compiler({ data }) {
       console.log(error.response)
     }
   }
+
+
+  const Logoutwithapi = async () => {
+    let token = Cookies.get('token');
+
+    try {
+      let response = await axios.post(`${nextConfig.REST_API_URL}/logout`, JSON.stringify({
+        token: token
+      }),
+        { headers: { 'Content-Type': 'application/json' } })
+
+      Cookies.remove('token');
+      if (response.data.status == 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: 'SUCCESS',
+          text: 'Logout Successfully',
+        }).then(() => {
+          Router.push('/Login')
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong..!!',
+        })
+      }
+
+
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong..!!',
+      })
+    }
+  }
+
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to logout !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(65 154 238)',
+      cancelButtonColor: 'rgb(216 67 67)',
+      confirmButtonText: 'Logout',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Logoutwithapi();
+      }
+    })
+  }
+
+
 
 
   const handleChangeLanguage = (langName) => {
@@ -109,86 +168,104 @@ function Compiler({ data }) {
   }
 
   return (
-    
+
     <>
 
-    <div id="main">
-      <h1 style={{ textAlign: 'center', fontFamily:'Algerian', fontWeight:'600' , paddingTop:15}}>CODE COMPILER</h1>
-
-      <div style={styles.editortopouter}>
-
-      <div style={styles.editorTop}>
+      <div id="main">
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{fontWeight:'700', fontSize:14}}>Select Language:</span>
-          <select style={styles.languageSelector} value={Language} onChange={(e) => handleChangeLanguage(e.target.value)}>
-            <option value="cpp">C++</option>
-            <option value="py">Python</option>
-          </select>
+
+          <h1 style={{ textAlign: 'center', fontFamily: 'Algerian', fontWeight: '600', width: '-webkit-fill-available', paddingTop: 15 }}>CODE COMPILER</h1>
+
+          <button onClick={handleLogout} type="button" class="btn btn-outline-warning" style={styles.btn_logout}>
+            <img src="logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
+          </button>
+
+          {/* <div onClick={handleLogout} class="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
+        <img src="logout_btn.png" alt="Logout" height={25} width={25}  /> 
+        <p style={{color:'black', fontWeight:'bold', margin:'0px 0px 0px 10px'}}> Logout</p>
+        </div> */}
+
         </div>
-        <button style={styles.runbtn} onClick={handleSubmit}>RUN</button>
-      </div>
 
-      </div>
-
-
-      <div style={styles.editorandoutput}>
-
-        <div style={styles.editorarea}>
-
-          <div style={styles.editorwindow}>
-            <AceEditor
-              width="100%"
-              height="100%"
-              placeholder="Enter Code Here"
-              mode={Emode}
-              theme="monokai"
-              name="code_editor"
-              onLoad={handleOnload}
-              onChange={(value) => setCode(value)}
-              fontSize={16}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
-              value={Code}
-              setOptions={{
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
-                enableSnippets: false,
-                showLineNumbers: true,
-                tabSize: 2,
-              }} />
-              
+        <div style={styles.editortopouter}>
+          <div style={styles.editorTop}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontWeight: '700', fontSize: 14 }}>Select Language:</span>
+              <select style={styles.languageSelector} value={Language} onChange={(e) => handleChangeLanguage(e.target.value)}>
+                <option value="cpp">C++</option>
+                <option value="py">Python</option>
+              </select>
+            </div>
+            <button style={styles.runbtn} onClick={handleSubmit}>RUN</button>
           </div>
+        </div>
 
-          {/* output widnow  */}
 
-          <div style={styles.outputwindow}>
-            <div style={{ height: '5%', display: 'flex' , justifyContent:'space-between'}}>
-            <h5 style={{fontWeight:'bold'}}>Output : - </h5>
-              <div  style={{width:200, display:'flex'}}>
-              <h5 style={{fontWeight:'bold'}} >Status : </h5>
-              {/* <h5 style={{marginLeft:10}} className={mystyles.status_yellow}>{Jobstatus}</h5> */}
-             
-             <Codestatus Jobstatus={Jobstatus} />
+        <div style={styles.editorandoutput}>
 
+          <div id="myContainer" style={styles.editorarea} >
+            <div class="row" style={{height:'80vh'}}>
+
+            <div class="col-md-6" style={{ height:'inherit', padding:0}}>
+           
+            <div style={styles.editorwindow}>
+              <AceEditor
+                width="100%"
+                height="100%"
+                placeholder="Enter Code Here"
+                mode={Emode}
+                theme="monokai"
+                name="code_editor"
+                onLoad={handleOnload}
+                onChange={(value) => setCode(value)}
+                fontSize={16}
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={Code}
+                setOptions={{
+                  enableBasicAutocompletion: true,
+                  enableLiveAutocompletion: true,
+                  enableSnippets: false,
+                  showLineNumbers: true,
+                  tabSize: 2,
+                }} />
+            </div>
+
+            
+            </div>
+
+            <div class="col-md-6" style={{  height:'inherit', padding:0}}>
+
+            {/* output widnow  */}
+            <div style={styles.outputwindow}>
+              <div style={{ height: '5%', display: 'flex', justifyContent: 'space-between' }}>
+                <h5 style={{ fontWeight: 'bold' }}>Output : - </h5>
+                <div style={{ width: 200, display: 'flex' }}>
+                  <h5 style={{ fontWeight: 'bold' }} >Status : </h5>
+                  <Codestatus Jobstatus={Jobstatus} />
+                </div>
+              </div>
+              <hr />
+              <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>
+                <textarea value={Joboutput} name="output" id="output" readOnly style={styles.outputtext}></textarea>
               </div>
             </div>
+            {/* output widnow end */}
 
-              <hr />
-            <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>              
-              <textarea value={Joboutput} name="output" id="output" readOnly style={styles.outputtext}></textarea>
             </div>
 
+
+
+            </div>
           </div>
 
         </div>
 
       </div>
 
-    </div>
 
-
-    <style jsx>{stylesheet}</style>
+      <style jsx>{stylesheet}</style>
     </>
   );
 }
@@ -198,20 +275,31 @@ export default Compiler;
 
 var styles = {
 
-  status_green:{
+  btn_logout: {
+    height: 40,
+    width: 40,
+    borderRadius: '1000%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+    backgroundColor: '#58584d',
+  },
+
+  status_green: {
     color: '#00cc00',
-    marginLeft:10,
-},
+    marginLeft: 10,
+  },
 
-status_red:{
-    color:'red',
-    marginLeft:10,
-},
+  status_red: {
+    color: 'red',
+    marginLeft: 10,
+  },
 
-status_blue:{
-    color:'#4168f8f7',
-    marginLeft:10,
-},
+  status_blue: {
+    color: '#4168f8f7',
+    marginLeft: 10,
+  },
 
   outputtext: {
     "border": "none",
@@ -222,7 +310,7 @@ status_blue:{
     "boxShadow": "none",
     height: '100%',
     width: '100%',
-    paddingLeft:"20px 20px 20px 20px",
+    paddingLeft: "20px 20px 20px 20px",
   },
   editorandoutput: {
     display: 'flex',
@@ -230,40 +318,34 @@ status_blue:{
   },
   outputwindow: {
     border: '1px solid gray',
-    width: "50%",
     height: '100%',
     minWidth: 300,
     padding: 10,
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
   editorwindow: {
     display: 'flex',
-    width: '50%',
-    height: '100%',
+    height: 'inherit',
     minWidth: 300,
   },
   editorarea: {
-    
-    display: 'flex',
-    flexDirection: 'row',
-    padding: "0px 15px 15px 15px",
+    // padding: "0px 15px 15px 15px",
     width: '100%',
-
     flexWrap: 'wrap',
   },
   editorTop: {
     display: 'flex',
-    justifyContent: 'space-between',    
+    justifyContent: 'space-between',
     width: '100%',
     padding: "10px 15px 10px 15px",
-    borderRadius:36,
-    background: "rgba(67, 67, 67, 0.3)",    
+    borderRadius: 36,
+    background: "rgba(67, 67, 67, 0.3)",
   },
-  editortopouter:{
+  editortopouter: {
     display: 'flex',
-    margin:"15px 15px 10px 15px",
+    margin: "15px 15px 10px 15px",
   },
   languageSelector: {
     marginLeft: 10,
@@ -271,15 +353,15 @@ status_blue:{
     border: '1px solid skyblue',
     borderRadius: '25px',
     padding: "4px 20px 4px 20px",
-    fontWeight:'700',
+    fontWeight: '700',
   },
   runbtn: {
     border: '1px solid skyblue',
     borderRadius: '25px',
     padding: "4px 20px 4px 20px",
-    backgroundColor:'white',
-    fontSize:14,
-    fontWeight:'700',
+    backgroundColor: 'white',
+    fontSize: 14,
+    fontWeight: '700',
   }
 }
 
@@ -294,6 +376,10 @@ const stylesheet = css`
     background-size: 150% 150%;    
     padding-bottom:45px;    
     z-index:-2;
+}
+
+#myContainer{
+  padding: 0px 30px 20px 30px;
 }
 
 `

@@ -4,6 +4,7 @@ import css from 'styled-jsx/css';
 import Axios from "axios";
 import Link from "next/link";
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2';
 
 const Signup = () => {
 
@@ -113,17 +114,35 @@ const Signup = () => {
             if (response.status==200) {
                 let result = response;
                 console.log(result.data.result);
-                alert(result.data.message);
+                // alert(result.data.message);
                 e.preventDefault();
-                router.push("/Login");
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'SUCCESS',
+                    text: 'User successfully sign up',              
+                  }).then(()=>{
+                      router.push("/Login");
+                  })
+
                } else {
                 console.log("http error : ", response.data)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.data,              
+                  })
             }
 
 
           }).catch((err)=>{
               console.log(err.response.data.error);
-              alert(err.response.data.error);
+            //   alert(err.response.data.error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: err.response.data.error,              
+              })
           });
          
     }

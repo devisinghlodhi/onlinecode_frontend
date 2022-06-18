@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { NextResponse } from "next/server";
 import nextConfig from '../../next.config';
 import Axios from "axios";
-
+import Swal from 'sweetalert2';
 
 async function checkEmailtokenValid() {
     const Router = useRouter();
@@ -78,7 +78,6 @@ const EmailToken = (data) => {
 
        await Axios.post(`${nextConfig.REST_API_URL}/forgotchangepassword`, jsondata , 
         {headers: {
-            // Overwrite Axios's automatically set Content-Type
             'Content-Type': 'application/json'
           }})
           
@@ -86,18 +85,33 @@ const EmailToken = (data) => {
             if (response.status==200) {
                 let result = response;
                 console.log(result.data);
-                
-
                 e.preventDefault();
-                // router.push("/Login");
+
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'SUCCESS',
+                    text: 'Password successfully changed',              
+                  }).then(()=>{
+                      Router.push("/Login");
+                  })
+
                } else {
-                console.log("http error : ", response.data)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.data.message,              
+                  })
             }
 
 
           }).catch((err)=>{
-              console.log(err.response.data.error);
-              alert(err.response.data.error);
+              console.log(err.response.data);            
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong..!!',              
+              })
           });
          
     }

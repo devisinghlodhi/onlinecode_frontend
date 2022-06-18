@@ -5,6 +5,7 @@ import Axios from "axios";
 import Link from "next/link";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 
 export default function Forgotpassword() {
@@ -12,7 +13,6 @@ export default function Forgotpassword() {
   const router = useRouter()
 
   const [Checkvalidmail, setCheckvalidmail] = useState(true);
-
   const [Usermail, setUsermail] = useState('');
 
   const handleChangeEmail = (e) => {
@@ -30,13 +30,11 @@ export default function Forgotpassword() {
 
 
   const handleForgot = async (e) => {
-    await handleChangeEmail(Usermail);
-    
+    await handleChangeEmail(Usermail);    
     if (Usermail != '' && Checkvalidmail) {
         sendforgotlinkwithapi(e);
     }
   }
-
 
   const sendforgotlinkwithapi = async (e) => {
     let jsondata = await JSON.stringify({
@@ -47,28 +45,42 @@ export default function Forgotpassword() {
     await Axios.post(`${nextConfig.REST_API_URL}/forgot`, jsondata,
       {
         headers: {
-          // Overwrite Axios's automatically set Content-Type
           'Content-Type': 'application/json',
         },
       })
       .then((response) => {
         if (response.status == 200) {
-          console.log(response.data.result);
-        //   Cookies.set('eamil_token', response.data.token)
-          
-
-
-
-          e.preventDefault();
-          // router.push("/");
           console.log(response.data);
-        //   if(response.data.result == 'success'){
-        //     router.push('/Compiler')
-        //   }
+          e.preventDefault();
+
+          if(response.data.status == 'success'){
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Link sent on Email',
+              text: 'Forgot password link successfully sent on email, please check your email !!',              
+            }).then(()=>{
+              // router.push("/");
+            })
+
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "Something went wrong..!!",              
+            })
+          }
+
+  
         }
       }).catch((err) => {
-        console.log(err.response.data.error);
-        alert(err.response.data.error);
+        console.log(err.response.data.message);        
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,              
+        })
+        
       })
   }
 
@@ -84,9 +96,7 @@ export default function Forgotpassword() {
               <input type="email" onChange={(e) => { handleChangeEmail(e.target.value) }} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
               </input>
               {!Checkvalidmail ? (<div className="invalid-field">Invalid email</div>) : null}
-            </div>
-
-        
+            </div>        
             <div className="hlink">
               <Link href="/Signup">
                 <a>Create an account?</a>
@@ -95,16 +105,11 @@ export default function Forgotpassword() {
                 <a href="#">Login</a>
               </Link>
             </div>
-            {/* <input type="submit" className={`btn btn-primary login-btn`} name="submit" value="Login" /> */}
-
             <button onClick={(e) => { handleForgot(e) }} className={`btn btn-primary login-btn`}>Send Link on Email</button>
           </div>
           {/* </form> */}
         </div>
       </div>
-
-
-
 
       <style jsx>{`
       

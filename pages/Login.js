@@ -5,7 +5,7 @@ import Axios from "axios";
 import Link from "next/link";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
-
+import Swal from 'sweetalert2';
 
 export default function Login() {
   
@@ -72,12 +72,29 @@ export default function Login() {
           // router.push("/");
           console.log(response.data);
           if(response.data.result == 'success'){
-            router.push('/Compiler')
+            Swal.fire({
+              icon: 'success',
+              title: 'SUCCESS',
+              text: 'Login Successfully',              
+            }).then(()=>{
+              router.push('/Compiler')
+            })
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Incorrect Password',              
+            })
           }
         }
       }).catch((err) => {
         console.log(err.response.data.error);
-        alert(err.response.data.error);
+        // alert(err.response.data.error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.error,              
+        })
       })
   }
 
