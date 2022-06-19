@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-
+import Image from 'next/image';
 import nextConfig from '../next.config';
 import css from 'styled-jsx/css';
 import Link from "next/link";
@@ -179,11 +179,11 @@ function Compiler({ data }) {
           <h1 style={{ textAlign: 'center', fontFamily: 'Algerian', fontWeight: '600', width: '-webkit-fill-available', paddingTop: 15 }}>CODE COMPILER</h1>
 
           <button onClick={handleLogout} type="button" className="btn btn-outline-warning" style={styles.btn_logout}>
-            <img src="logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
+            <Image src="/logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
           </button>
 
           {/* <div onClick={handleLogout} className="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
-        <img src="logout_btn.png" alt="Logout" height={25} width={25}  /> 
+        <Image src="logout_btn.png" alt="Logout" height={25} width={25}  /> 
         <p style={{color:'black', fontWeight:'bold', margin:'0px 0px 0px 10px'}}> Logout</p>
         </div> */}
 

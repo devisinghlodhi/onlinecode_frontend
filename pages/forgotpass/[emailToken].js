@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import css from 'styled-jsx/css';
 import { useRouter } from "next/router";
-import { NextResponse } from "next/server";
 import nextConfig from '../../next.config';
 import Axios from "axios";
 import Swal from 'sweetalert2';
