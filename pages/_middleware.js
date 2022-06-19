@@ -67,18 +67,16 @@ export default async function middleware(req) {
         }
     }
 
-    if (url.includes('/Compiler')) {
-        let LoginData = await checkValidLogin(req);
-        if(LoginData.login != 'success'){
-            const { pathname, origin } = req.nextUrl                               
-            return NextResponse.redirect(`${origin}/Login`);
-        }
-    }
+    // if (url.includes('/Compiler')) {
+    //     let LoginData = await checkValidLogin(req);
+    //     if(LoginData.login != 'success'){
+    //         const { pathname, origin } = req.nextUrl                               
+    //         return NextResponse.redirect(`${origin}/Login`);
+    //     }
+    // }
 
 
 }
-
-
 
 
 
