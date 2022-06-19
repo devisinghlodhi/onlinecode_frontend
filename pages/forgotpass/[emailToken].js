@@ -6,32 +6,6 @@ import nextConfig from '../../next.config';
 import Axios from "axios";
 import Swal from 'sweetalert2';
 
-async function checkEmailtokenValid() {
-    const Router = useRouter();
-    const token = Router.query.emailToken;
-
-    let data;
-
-    try {
-        let jsondata = await JSON.stringify({ token: token })
-        let response = await Axios.post(`${nextConfig.REST_API_URL}/verifyemailtoken`, jsondata,
-            { headers: { 'Content-Type': 'application/json' } })
-
-        console.log(response.data)
-        if (response.data.status == 'success') {
-            data = 'success';
-        } else {
-            data = 'fail';
-        }
-
-    } catch (error) {
-        console.log(error);
-        data = 'fail';
-    }
-
-    return data;
-}
-
 
 
 const EmailToken = (data) => {

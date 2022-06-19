@@ -6,9 +6,22 @@ import Link from "next/link";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import absoluteUrl from 'next-absolute-url'
 
 
-export default function Forgotpassword() {
+Forgotpassword.getInitialProps = async (context) => {
+  const { req, query, res, asPath, pathname } = context;
+  if (req) {    
+    const { origin } = absoluteUrl(req)
+    return { currOrigin: origin }
+   }else{
+    return { currOrigin: 'http://localhost:3050' }
+   }
+}
+
+
+
+export default function Forgotpassword({currOrigin}) {
   
   const router = useRouter()
 
@@ -36,9 +49,9 @@ export default function Forgotpassword() {
     }
   }
 
-  const sendforgotlinkwithapi = async (e) => {
+  const sendforgotlinkwithapi = async (e) => {    
     let jsondata = await JSON.stringify({
-        "hosturl":"http://localhost:3000/forgotpass",
+        "hosturl":`${currOrigin}/forgotpass`,
         "email": Usermail.toString(),    
     })
 

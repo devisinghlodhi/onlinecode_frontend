@@ -170,17 +170,19 @@ function Compiler({ data }) {
   return (
 
     <>
+    <div id='divbackground'>
 
+    
       <div id="main">
         <div style={{ display: 'flex', alignItems: 'center' }}>
 
           <h1 style={{ textAlign: 'center', fontFamily: 'Algerian', fontWeight: '600', width: '-webkit-fill-available', paddingTop: 15 }}>CODE COMPILER</h1>
 
-          <button onClick={handleLogout} type="button" class="btn btn-outline-warning" style={styles.btn_logout}>
+          <button onClick={handleLogout} type="button" className="btn btn-outline-warning" style={styles.btn_logout}>
             <img src="logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
           </button>
 
-          {/* <div onClick={handleLogout} class="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
+          {/* <div onClick={handleLogout} className="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
         <img src="logout_btn.png" alt="Logout" height={25} width={25}  /> 
         <p style={{color:'black', fontWeight:'bold', margin:'0px 0px 0px 10px'}}> Logout</p>
         </div> */}
@@ -204,9 +206,9 @@ function Compiler({ data }) {
         <div style={styles.editorandoutput}>
 
           <div id="myContainer" style={styles.editorarea} >
-            <div class="row" style={{height:'80vh'}}>
+            <div className="row" style={{height:'80vh'}}>
 
-            <div class="col-md-6" style={{ height:'inherit', padding:0}}>
+            <div className="col-md-6" style={{ height:'inherit', padding:0}}>
            
             <div style={styles.editorwindow}>
               <AceEditor
@@ -235,7 +237,7 @@ function Compiler({ data }) {
             
             </div>
 
-            <div class="col-md-6" style={{  height:'inherit', padding:0}}>
+            <div className="col-md-6" style={{  height:'inherit', padding:0}}>
 
             {/* output widnow  */}
             <div style={styles.outputwindow}>
@@ -261,6 +263,8 @@ function Compiler({ data }) {
           </div>
 
         </div>
+
+      </div>
 
       </div>
 
@@ -311,6 +315,7 @@ var styles = {
     height: '100%',
     width: '100%',
     paddingLeft: "20px 20px 20px 20px",
+    resize: 'none',
   },
   editorandoutput: {
     display: 'flex',
@@ -371,11 +376,42 @@ const stylesheet = css`
  #main{   
     width: 100%;
     justify-content: center;
-    background-image: url("bback.jpg"); 
+    ${'' /* background-image: url("bback.jpg"); 
     background-repeat: no-repeat;
-    background-size: 150% 150%;    
+    background-attachment: fixed;
+    background-size: 150% 150%;     */}
     padding-bottom:45px;    
     z-index:-2;
+}
+
+#divbackground{
+  ${'' /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 500% 500%;
+    animation: gradient 15s ease infinite;   */}
+
+    background-image: url("bback.jpg"); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 150% 150%;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
+  #main{
+    height:90rem;
+  }
 }
 
 #myContainer{

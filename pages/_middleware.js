@@ -35,6 +35,14 @@ async function checkValidLogin(req){
 
 export default async function middleware(req) {
     const url = req.url;
+
+    let {origin: hostOrigin } = req.nextUrl
+    if(req.nextUrl.href === hostOrigin || req.nextUrl.href === `${hostOrigin}/`){
+        const { pathname, origin } = req.nextUrl                                     
+        return NextResponse.redirect(`${origin}/Login`);
+    }
+
+
     if (url.includes('/Login')) {
         let LoginData = await checkValidLogin(req);
         if(LoginData.login == 'success'){
@@ -66,6 +74,7 @@ export default async function middleware(req) {
             return NextResponse.redirect(`${origin}/Login`);
         }
     }
+
 
 }
 
