@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   // REST_API_URL: "http://localhost:5000/api",
-  REST_API_URL : "http://13.233.138.10:5000/api",
+  REST_API_URL : "http://13.235.11.220:5000/api",
 }
 
 module.exports = nextConfig
