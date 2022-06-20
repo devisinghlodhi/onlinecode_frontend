@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  REST_API_URL: "http://localhost:5000/api",
-  // REST_API_URL : "https://f1a5-49-36-21-121.in.ngrok.io/api",
+  // REST_API_URL: "http://localhost:5000/api",
+  REST_API_URL : "https://a210-49-36-18-39.in.ngrok.io/api",
 }
 
 module.exports = nextConfig

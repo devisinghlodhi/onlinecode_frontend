@@ -4,7 +4,23 @@ import { useRouter } from "next/router";
 import nextConfig from '../../next.config';
 import Axios from "axios";
 import Swal from 'sweetalert2';
+import Checkauth from '../../Modules/checkAuth';
 
+
+
+export async function getServerSideProps(context) {
+    const data = await Checkauth(context.req.headers.cookie);    
+    
+    if(data.login == 'success'){
+      return {
+        redirect:{
+          destination: `/Compiler`,
+          permanent: false
+        }
+      }
+    }
+    return { props: { data } }
+  }
 
 
 const EmailToken = (data) => {

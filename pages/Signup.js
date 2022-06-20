@@ -5,6 +5,23 @@ import Axios from "axios";
 import Link from "next/link";
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2';
+import Checkauth from '../Modules/checkAuth';
+
+
+export async function getServerSideProps(context) {
+    const data = await Checkauth(context.req.headers.cookie);    
+    
+    if(data.login == 'success'){
+      return {
+        redirect:{
+          destination: `/Compiler`,
+          permanent: false
+        }
+      }
+    }
+  
+    return { props: { data } }
+  }
 
 const Signup = () => {
 

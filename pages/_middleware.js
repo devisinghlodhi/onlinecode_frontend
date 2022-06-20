@@ -36,36 +36,36 @@ async function checkValidLogin(req){
 export default async function middleware(req) {
     const url = req.url;
 
-    let {origin: hostOrigin } = req.nextUrl
-    if(req.nextUrl.href === hostOrigin || req.nextUrl.href === `${hostOrigin}/`){
-        const { pathname, origin } = req.nextUrl                                     
-        return NextResponse.redirect(`${origin}/Login`);
-    }
+    // let {origin: hostOrigin } = req.nextUrl
+    // if(req.nextUrl.href === hostOrigin || req.nextUrl.href === `${hostOrigin}/`){
+    //     const { pathname, origin } = req.nextUrl                                     
+    //     return NextResponse.redirect(`${origin}/Login`);
+    // }
 
 
-    if (url.includes('/Login')) {
-        let LoginData = await checkValidLogin(req);
-        if(LoginData.login == 'success'){
-            const { pathname, origin } = req.nextUrl                                     
-            return NextResponse.redirect(`${origin}/Compiler`);
-        }
-    }
+    // if (url.includes('/Login')) {
+    //     let LoginData = await checkValidLogin(req);
+    //     if(LoginData.login == 'success'){
+    //         const { pathname, origin } = req.nextUrl                                     
+    //         return NextResponse.redirect(`${origin}/Compiler`);
+    //     }
+    // }
 
-    if (url.includes('/Signup')) {
-        let LoginData = await checkValidLogin(req);
-        if(LoginData.login == 'success'){
-            const { pathname, origin } = req.nextUrl                                     
-            return NextResponse.redirect(`${origin}/Compiler`);
-        }
-    }
+    // if (url.includes('/Signup')) {
+    //     let LoginData = await checkValidLogin(req);
+    //     if(LoginData.login == 'success'){
+    //         const { pathname, origin } = req.nextUrl                                     
+    //         return NextResponse.redirect(`${origin}/Compiler`);
+    //     }
+    // }
 
-    if (url.includes('/Forgotpassword')) {
-        let LoginData = await checkValidLogin(req);
-        if(LoginData.login == 'success'){
-            const { pathname, origin } = req.nextUrl                                     
-            return NextResponse.redirect(`${origin}/Compiler`);
-        }
-    }
+    // if (url.includes('/Forgotpassword')) {
+    //     let LoginData = await checkValidLogin(req);
+    //     if(LoginData.login == 'success'){
+    //         const { pathname, origin } = req.nextUrl                                     
+    //         return NextResponse.redirect(`${origin}/Compiler`);
+    //     }
+    // }
 
     // if (url.includes('/Compiler')) {
     //     let LoginData = await checkValidLogin(req);

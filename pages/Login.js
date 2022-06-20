@@ -6,6 +6,26 @@ import Link from "next/link";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import Checkauth from '../Modules/checkAuth';
+
+
+
+export async function getServerSideProps(context) {
+  const data = await Checkauth(context.req.headers.cookie);    
+  
+  if(data.login == 'success'){
+    return {
+      redirect:{
+        destination: `/Compiler`,
+        permanent: false
+      }
+    }
+  }
+
+  return { props: { data } }
+}
+
+
 
 export default function Login() {
   

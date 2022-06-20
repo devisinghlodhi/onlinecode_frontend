@@ -7,46 +7,73 @@ import cookie from 'cookie';
 
 
 const Checkauth = async (contextcookie) => {
-    // const cookiedata = context.req.headers.cookie;
-    const cookiedata = contextcookie;
-    let data;
-  
-    
-    if (cookiedata) {
-      const allcookie = cookie.parse(cookiedata);
-        
-      // const jwt = allcookie.token;
-      const jwt = cookiedata;
-
-      let codedata = JSON.stringify({        
-        token: jwt
-      })
+  // const cookiedata = context.req.headers.cookie;
+  const cookiedata = contextcookie;
+  let data;
 
 
-      console.log(jwt)
-  
-      try {
-        // const res = await Axios.post(`${nextConfig.REST_API_URL}/alreadylogincheck`, {  "token": jwt  },
-        const res = await Axios.post(`${nextConfig.REST_API_URL}/alreadylogincheck`, codedata,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-  
-        data = await res.data;
-  
-      } catch (error) {
-        console.log("api error:",error)
+  if (cookiedata) {
+
+    const { token } = cookie.parse(cookiedata);
+
+    let jwt = token;
+
+    let codedata = JSON.stringify({
+      token: jwt
+    })
+
+    console.log(token)
+
+    // try {        
+    //   const response = await Axios.post(`${nextConfig.REST_API_URL}/alreadylogincheck`, codedata,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     })
+
+    //   let response_data = response.data;
+
+    //       if(response_data.status == 'success'){
+    //           data = { login: "success", error: "Login Success" }
+    //       }else{
+    //           data = { login: "failed", error: "Login Expired" };    
+    //       }
+
+    // } catch (error) {
+    //   console.log("api error:",error)
+    //   data = { login: "failed", error: "Login Expired" };
+    // }
+
+
+    try {
+      const response = await fetch(`${nextConfig.REST_API_URL}/alreadylogincheck`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: codedata
+      });
+
+      let response_data = await response.json();
+
+      if (response_data.status == 'success') {
+        data = { login: "success", error: "Login Success" }
+      } else {
         data = { login: "failed", error: "Login Expired" };
       }
-  
-    } else {
-      data = { login: "failed", error: "Login Expired" };
+
+    } catch (error) {
+      // console.log("api error:", error)
+      data = { login: "failed", error: error };
     }
 
-    return data;
-  
+  } else {
+    data = { login: "failed", error: "Token Not Available" };
+  }
+
+  return data;
+
 }
 
 export default Checkauth;

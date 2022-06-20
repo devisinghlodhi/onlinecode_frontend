@@ -7,22 +7,38 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import absoluteUrl from 'next-absolute-url'
+import Checkauth from '../Modules/checkAuth';
 
 
-Forgotpassword.getInitialProps = async (context) => {
+
+export async function getServerSideProps(context) {
+  const data = await Checkauth(context.req.headers.cookie);
+
+  if (data.login == 'success') {
+    return {
+      redirect: {
+        destination: `/Compiler`,
+        permanent: false
+      }
+    }
+  }
+
   const { req, query, res, asPath, pathname } = context;
-  if (req) {    
+  if (req) {
     const { origin } = absoluteUrl(req)
-    return { currOrigin: origin }
-   }else{
-    return { currOrigin: 'http://localhost:3050' }
-   }
+    return { props: { currOrigin: origin } }
+  } 
+  else {
+    return { props: { currOrigin: 'http://localhost:3050' } }
+  }
+
 }
 
 
 
-export default function Forgotpassword({currOrigin}) {
-  
+
+export default function Forgotpassword({ currOrigin }) {
+
   const router = useRouter()
 
   const [Checkvalidmail, setCheckvalidmail] = useState(true);
@@ -43,16 +59,16 @@ export default function Forgotpassword({currOrigin}) {
 
 
   const handleForgot = async (e) => {
-    await handleChangeEmail(Usermail);    
+    await handleChangeEmail(Usermail);
     if (Usermail != '' && Checkvalidmail) {
-        sendforgotlinkwithapi(e);
+      sendforgotlinkwithapi(e);
     }
   }
 
-  const sendforgotlinkwithapi = async (e) => {    
+  const sendforgotlinkwithapi = async (e) => {
     let jsondata = await JSON.stringify({
-        "hosturl":`${currOrigin}/forgotpass`,
-        "email": Usermail.toString(),    
+      "hosturl": `${currOrigin}/forgotpass`,
+      "email": Usermail.toString(),
     })
 
     await Axios.post(`${nextConfig.REST_API_URL}/forgot`, jsondata,
@@ -66,34 +82,34 @@ export default function Forgotpassword({currOrigin}) {
           console.log(response.data);
           e.preventDefault();
 
-          if(response.data.status == 'success'){
+          if (response.data.status == 'success') {
 
             Swal.fire({
               icon: 'success',
               title: 'Link sent on Email',
-              text: 'Forgot password link successfully sent on email, please check your email !!',              
-            }).then(()=>{
+              text: 'Forgot password link successfully sent on email, please check your email !!',
+            }).then(() => {
               // router.push("/");
             })
 
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: "Something went wrong..!!",              
+              text: "Something went wrong..!!",
             })
           }
 
-  
+
         }
       }).catch((err) => {
-        console.log(err.response.data.message);        
+        console.log(err.response.data.message);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message,              
+          text: err.response.data.message,
         })
-        
+
       })
   }
 
@@ -109,7 +125,7 @@ export default function Forgotpassword({currOrigin}) {
               <input type="email" onChange={(e) => { handleChangeEmail(e.target.value) }} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
               </input>
               {!Checkvalidmail ? (<div className="invalid-field">Invalid email</div>) : null}
-            </div>        
+            </div>
             <div className="hlink">
               <Link href="/Signup">
                 <a>Create an account?</a>

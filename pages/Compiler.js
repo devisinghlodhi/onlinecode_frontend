@@ -16,10 +16,22 @@ import AceEditor from '../Components/AceEditor';
 // const AceEditor = dynamic(import('react-ace'), { ssr: false });  //import without server side rendering
 // import AceEditor from 'react-ace-editor';
 
-// export async function getServerSideProps(context) {
-//   const data = await Checkauth(context.req.headers.cookie);    
-//   return { props: { data } }
-// }
+export async function getServerSideProps(context) {
+  const data = await Checkauth(context.req.headers.cookie);    
+  
+  // console.log(data)
+  
+  if(data.login != 'success'){
+    return {
+      redirect:{
+        destination: `/Login`,
+        permanent: false
+      }
+    }
+  }
+
+  return { props: { data } }
+}
 
 
 function Codestatus(Jobstatus) {
@@ -42,7 +54,7 @@ function Compiler({ data }) {
   const [Joboutput, setJoboutput] = useState("");
 
 
-
+  // console.log(data);
 
 
   const handleSubmit = async () => {
