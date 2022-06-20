@@ -55,7 +55,7 @@ const Signup = () => {
     const handleChangePnumber = (e)=>{
         setPnumber(e);
         let num = e;
-        if (!num.match(/^([0|\+[0-9]{1,5})?([7-9][0-9]{9})$/)) {
+        if (!num.match(/^([0|\+[0-9]{1,5})?([5-9][0-9]{9})$/)) {
             setChecknumber(false);
         } else if (!(num.length == 10)) {
             setChecknumber(false);
