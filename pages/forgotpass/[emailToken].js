@@ -9,8 +9,7 @@ import Checkauth from '../../Modules/checkAuth';
 
 
 export async function getServerSideProps(context) {
-    const data = await Checkauth(context.req.headers.cookie);    
-    
+    const data = await Checkauth(context.req.headers.cookie);        
     if(data.login == 'success'){
       return {
         redirect:{
@@ -23,7 +22,7 @@ export async function getServerSideProps(context) {
   }
 
 
-const EmailToken = (data) => {
+const EmailToken = () => {
    
     const [Checkvalidpass, setCheckvalidpass] = useState(true);
     const [Checkconfirmpass, setCheckconfirmpass] = useState(true);

@@ -46,7 +46,7 @@ export default async function middleware(req) {
         const { pathname, origin } = req.nextUrl   
         console.log(origin);
         let data = await checkEmailtokenValid(req);
-        console.log(data);
+        console.log("server data recived : ", data);
         if (data.status != 'success') {
             return NextResponse.redirect(`${origin}/Login`);
         }
