@@ -42,20 +42,17 @@ async function checkEmailtokenValid(req) {
 export default async function middleware(req) {
     const url = req.url;
     
-    if (url.includes('/forgotpass')) {
-        const { pathname, origin } = req.nextUrl   
-        console.log(origin);
-        let data = await checkEmailtokenValid(req);
-        console.log("server data recived : ", data);
-        if (data.status != 'success') {
-            return NextResponse.redirect(`${origin}/Login`);
-        }
-    }
+    // if (url.includes('/forgotpass')) {
+    //     const { pathname, origin } = req.nextUrl   
+    //     console.log(origin);
+    //     let data = await checkEmailtokenValid(req);
+    //     console.log("server data recived : ", data);
+    //     if (data.status != 'success') {
+    //         return NextResponse.redirect(`${origin}/Expirelink`);
+    //     }
+    // }
     
 }
-
-
-
 
 
 
