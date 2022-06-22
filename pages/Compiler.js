@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import cookie from 'cookie';
 import Checkauth from '../Modules/checkAuth';
+import Codeexample from '../Modules/Codeexample';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import AceEditor from '../Components/AceEditor';
@@ -143,7 +144,6 @@ function Compiler({ data }) {
         })
       }
 
-
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -174,14 +174,14 @@ function Compiler({ data }) {
   }
 
 
-
-
   const handleChangeLanguage = (langName) => {
     setLanguage(langName); // Change language for send the type of language for server    
     if (langName == 'cpp') {  // Change editor template mode
       setEmode('c_cpp')
+      setCode(Codeexample.cpp);
     } else if (langName == 'py') {
       setEmode('python')
+      setCode(Codeexample.python);
     } else if (langName == 'java') {
       setEmode('java')
     } else if (langName == 'js') {
@@ -192,7 +192,8 @@ function Compiler({ data }) {
   }
 
   const handleOnload = () => {
-    // console.log("this is onload");
+    console.log("this is onload");
+    setCode(Codeexample.cpp);
   }
 
   return (

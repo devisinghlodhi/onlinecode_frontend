@@ -192,31 +192,31 @@ const Signup = () => {
                         <h2>Create Account</h2>
 
                         <div className="input-fields">
-                            <input type="text" value={Username} onChange={(e) => { handleChangeName(e.target.value) }} onBlur={(e) => { handleChangeName(e.target.value) }} className="name inputbox" placeholder="Enter your name" required />
+                            <input type="text"  onBlur={(e) => { handleChangeName(e.target.value) }} className="name inputbox" placeholder="Enter your name" required />
                             {!Checkname ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="number" value={Pnumber} onChange={(e) => { handleChangePnumber(e.target.value) }} onBlur={(e) => { handleChangePnumber(e.target.value) }} className="pnumber inputbox"
+                            <input type="number"  onBlur={(e) => { handleChangePnumber(e.target.value) }} className="pnumber inputbox"
                                 placeholder="Enter you phone number" required />
                             {!Checknumber ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="email" value={Usermail} onChange={(e) => { handleChangeEmail(e.target.value) }} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
+                            <input type="email"  onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
                                 required />
 
                             {!Checkvalidmail ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" value={Upass} onChange={(e) => { handleChangePass(e.target.value) }} onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
+                            <input type="password" onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
                             <div className="invalid-field"></div>
                             {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" value={Confirmpass} onChange={(e) => { handleChangeconfirmpass(e.target.value) }} onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
+                            <input type="password" onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
                                 required />
                             {!Checkconfirmpass ? (<div className="invalid-field">Password Does not match, Please Try again..!!</div>) : null}
 
@@ -231,11 +231,17 @@ const Signup = () => {
                             }}
                         >
                             <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >Sign up</p>
-                            
-                            <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}`  }} size={15} color='white' />
-                            
+
+                            <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}` }} size={15} color='white' />
+
                             {/* <div class="spinner-border text-light" style={{ display: `${loadingStatus ? 'flex' : 'none'}`, height: '1.5rem', width: '1.5rem', position: 'absolute' }} role="status"></div> */}
 
+                        </div>
+
+                        <div className="hlink">
+                            <Link href="/Login">
+                                <a>Existing user? Login</a>
+                            </Link>
                         </div>
 
 
@@ -253,6 +259,23 @@ const Signup = () => {
 
 
 const stylesheet = css`
+
+.hlink{
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    font-size: .9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hlink a{
+    text-decoration: none;
+    text-align:center;
+}
+
  #main{
     display: flex;
     height: 100vh;
