@@ -11,10 +11,11 @@ import Checkauth from '../Modules/checkAuth';
 import { ThreeBounce } from 'better-react-spinkit';
 
 
-
-
 export async function getServerSideProps(context) {
   const data = await Checkauth(context.req.headers.cookie);
+
+  
+
 
   if (data.login == 'success') {
     return {
@@ -173,16 +174,14 @@ export default function Login() {
             >
               <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >Login</p>
               <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}`  }} size={15} color='white' />
-            </div>
 
+              
+            </div>
 
           </div>
           {/* </form> */}
         </div>
       </div>
-
-
-
 
       <style jsx>{`
       
