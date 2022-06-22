@@ -12,18 +12,19 @@ import Checkauth from '../Modules/checkAuth';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import AceEditor from '../Components/AceEditor';
+import { ThreeBounce } from 'better-react-spinkit';
 
 // const AceEditor = dynamic(import('react-ace'), { ssr: false });  //import without server side rendering
 // import AceEditor from 'react-ace-editor';
 
 export async function getServerSideProps(context) {
-  const data = await Checkauth(context.req.headers.cookie);    
-  
+  const data = await Checkauth(context.req.headers.cookie);
+
   // console.log(data)
-  
-  if(data.login != 'success'){
+
+  if (data.login != 'success') {
     return {
-      redirect:{
+      redirect: {
         destination: `/Login`,
         permanent: false
       }
@@ -53,11 +54,18 @@ function Compiler({ data }) {
   const [Jobstatus, setJobstatus] = useState("");
   const [Joboutput, setJoboutput] = useState("");
 
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const Loading = (value) => {
+    setLoadingStatus(value)
+  }
+
 
   // console.log(data);
 
 
   const handleSubmit = async () => {
+    Loading(true);
+
     console.log(Language)
     let codedata = await JSON.stringify({
       language: Language,
@@ -67,7 +75,6 @@ function Compiler({ data }) {
     try {
       //###########  For Send the code to server -------------------------------------------------------------
       let response = await axios.post(`${nextConfig.REST_API_URL}/run`, codedata,
-        // let response = await axios.post('/api/run', codedata,
         { headers: { 'Content-Type': 'application/json' } })
       console.log("Your Response is : ", response.data);
       setJobstatus("pending");
@@ -87,9 +94,14 @@ function Compiler({ data }) {
           // var pretty = JSON.stringify(obj, undefined, 4);
           setJoboutput(jobOutput);
 
-          if (jobStatus === "pending") return;
-          clearInterval(intervalId)
+          if (jobStatus === "pending"){
+            return;
+          }else{
+            Loading(false);
+            clearInterval(intervalId)
+          }
         } else {
+          Loading(false);
           console.error(error);
           clearInterval(intervalId)
         }
@@ -97,6 +109,7 @@ function Compiler({ data }) {
       }, 1000);
 
     } catch (error) {
+      Loading(false);
       console.log(error.response)
     }
   }
@@ -114,6 +127,7 @@ function Compiler({ data }) {
       Cookies.remove('token');
       if (response.data.status == 'success') {
         Swal.fire({
+          confirmButtonColor: '#0D6EFD',
           icon: 'success',
           title: 'SUCCESS',
           text: 'Logout Successfully',
@@ -122,6 +136,7 @@ function Compiler({ data }) {
         })
       } else {
         Swal.fire({
+          confirmButtonColor: '#0D6EFD',
           icon: 'error',
           title: 'Oops...',
           text: 'Something went wrong..!!',
@@ -132,6 +147,7 @@ function Compiler({ data }) {
     } catch (error) {
       console.log(error);
       Swal.fire({
+        confirmButtonColor: '#0D6EFD',
         icon: 'error',
         title: 'Oops...',
         text: 'Something went wrong..!!',
@@ -182,101 +198,126 @@ function Compiler({ data }) {
   return (
 
     <>
-    <div id='divbackground'>
+      <div id='divbackground'>
 
-    
-      <div id="main">
-        <div style={{ display: 'flex', alignItems: 'center' }}>
 
-          <h1 style={{ textAlign: 'center', fontFamily: 'Algerian', fontWeight: '600', width: '-webkit-fill-available', paddingTop: 15 }}>CODE COMPILER</h1>
+        <div id="main">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
 
-          <button onClick={handleLogout} type="button" className="btn btn-outline-warning" style={styles.btn_logout}>
-            <Image src="/logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
-          </button>
+            <h1 style={{ textAlign: 'center', fontFamily: 'Algerian', fontWeight: '600', width: '-webkit-fill-available', paddingTop: 15 }}>CODE COMPILER</h1>
 
-          {/* <div onClick={handleLogout} className="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
+            <button onClick={handleLogout} type="button" className="btn btn-outline-warning" style={styles.btn_logout}>
+              <Image src="/logout_btn.png" alt="Logout" height={25} width={25} style={{ filter: 'invert(100%)' }} />
+            </button>
+
+            {/* <div onClick={handleLogout} className="btn btn-outline-warning" style={{display:'flex', justifyContent:'center', alignItems:'center', width:'fit-content'}}>
         <Image src="logout_btn.png" alt="Logout" height={25} width={25}  /> 
         <p style={{color:'black', fontWeight:'bold', margin:'0px 0px 0px 10px'}}> Logout</p>
         </div> */}
 
-        </div>
-
-        <div style={styles.editortopouter}>
-          <div style={styles.editorTop}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ fontWeight: '700', fontSize: 14 }}>Select Language:</span>
-              <select style={styles.languageSelector} value={Language} onChange={(e) => handleChangeLanguage(e.target.value)}>
-                <option value="cpp">C++</option>
-                <option value="py">Python</option>
-              </select>
-            </div>
-            <button style={styles.runbtn} onClick={handleSubmit}>RUN</button>
           </div>
-        </div>
+
+          <div style={styles.editortopouter}>
+            <div style={styles.editorTop}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ fontWeight: '700', fontSize: 14 }}>Select Language:</span>
+                <select className='selectBtn' style={styles.languageSelector} value={Language} onChange={(e) => handleChangeLanguage(e.target.value)}>
+                  <option value="cpp">C++</option>
+                  <option value="py">Python</option>
+                </select>
+              </div>
+              {/* <button className="btn btn-light coderunbtn" style={styles.runbtn} onClick={handleSubmit}>RUN</button> */}
+
+              <div onClick={(e) => { handleSubmit(e) }} className={`btn btn-light coderunbtn`}
+                style={{
+                  pointerEvents: `${loadingStatus ? 'none' : 'auto'}`,
+                  // opacity: `${loadingStatus ? '0.6' : '1'}`,
+                  // backgroundColor: `${loadingStatus ? '#d2dcd3' : 'white'}`,
+
+                  border: '1px solid skyblue',
+                  borderRadius: '25px',
+                  padding: "4px 20px 4px 20px",
+                  fontSize: 14,
+                  fontWeight: '700',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+
+                }}
+              >
+                <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >RUN</p>
+                <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}` }} size={10} color='darkblue' />
+              </div>
 
 
-        <div style={styles.editorandoutput}>
 
-          <div id="myContainer" style={styles.editorarea} >
-            <div className="row" style={{height:'80vh'}}>
-
-            <div className="col-md-6" style={{ height:'inherit', padding:0}}>
-           
-            <div style={styles.editorwindow}>
-              <AceEditor
-                width="100%"
-                height="100%"
-                placeholder="Enter Code Here"
-                mode={Emode}
-                theme="monokai"
-                name="code_editor"
-                onLoad={handleOnload}
-                onChange={(value) => setCode(value)}
-                fontSize={16}
-                showPrintMargin={true}
-                showGutter={true}
-                highlightActiveLine={true}
-                value={Code}
-                setOptions={{
-                  enableBasicAutocompletion: true,
-                  enableLiveAutocompletion: true,
-                  enableSnippets: false,
-                  showLineNumbers: true,
-                  tabSize: 2,
-                }} />
             </div>
+          </div>
 
-            
-            </div>
 
-            <div className="col-md-6" style={{  height:'inherit', padding:0}}>
+          <div style={styles.editorandoutput}>
 
-            {/* output widnow  */}
-            <div style={styles.outputwindow}>
-              <div style={{ height: '5%', display: 'flex', justifyContent: 'space-between' }}>
-                <h5 style={{ fontWeight: 'bold' }}>Output : - </h5>
-                <div style={{ width: 200, display: 'flex' }}>
-                  <h5 style={{ fontWeight: 'bold' }} >Status : </h5>
-                  <Codestatus Jobstatus={Jobstatus} />
+            <div id="myContainer" style={styles.editorarea} >
+              <div className="row" style={{ height: '80vh' }}>
+
+                <div className="col-md-6" style={{ height: 'inherit', padding: 0 }}>
+
+                  <div style={styles.editorwindow}>
+                    <AceEditor
+                      width="100%"
+                      height="100%"
+                      placeholder="Enter Code Here"
+                      mode={Emode}
+                      theme="monokai"
+                      name="code_editor"
+                      onLoad={handleOnload}
+                      onChange={(value) => setCode(value)}
+                      fontSize={16}
+                      showPrintMargin={true}
+                      showGutter={true}
+                      highlightActiveLine={true}
+                      value={Code}
+                      setOptions={{
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                        enableSnippets: false,
+                        showLineNumbers: true,
+                        tabSize: 2,
+                      }} />
+                  </div>
+
+
                 </div>
+
+                <div className="col-md-6" style={{ height: 'inherit', padding: 0 }}>
+
+                  {/* output widnow  */}
+                  <div style={styles.outputwindow}>
+                    <div style={{ height: '5%', display: 'flex', justifyContent: 'space-between' }}>
+                      <h5 style={{ fontWeight: 'bold' }}>Output : - </h5>
+                      <div style={{ width: 200, display: 'flex' }}>
+                        <h5 style={{ fontWeight: 'bold' }} >Status : </h5>
+                        <Codestatus Jobstatus={Jobstatus} />
+                      </div>
+                    </div>
+                    <hr />
+                    <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>
+                      <textarea value={Joboutput} name="output" id="output" readOnly style={styles.outputtext}></textarea>
+                    </div>
+                  </div>
+                  {/* output widnow end */}
+
+                </div>
+
+
+
               </div>
-              <hr />
-              <div style={{ height: '95%', display: 'flex', flexDirection: 'column' }}>
-                <textarea value={Joboutput} name="output" id="output" readOnly style={styles.outputtext}></textarea>
-              </div>
-            </div>
-            {/* output widnow end */}
-
             </div>
 
-
-
-            </div>
           </div>
 
         </div>
-
-      </div>
 
       </div>
 
@@ -376,15 +417,38 @@ var styles = {
     border: '1px solid skyblue',
     borderRadius: '25px',
     padding: "4px 20px 4px 20px",
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     fontSize: 14,
     fontWeight: '700',
+
+    // position:'relative',
+    // width: '90%',
+    // marginTop: '30px',
+    // marginBottom: '20px',
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   }
+
 }
 
 
 
 const stylesheet = css`
+
+.coderunbtn:hover {
+  background-color: #3e8e41;
+  color:white;
+  transition: background-color 0.5s ease;
+}
+
+.selectBtn:hover{
+  background-color: #d2dcd3;
+  transition: background-color 0.5s ease;
+}
+
+
+
  #main{   
     width: 100%;
     justify-content: center;

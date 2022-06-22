@@ -8,14 +8,17 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import Checkauth from '../Modules/checkAuth';
 
+import { ThreeBounce } from 'better-react-spinkit';
+
+
 
 
 export async function getServerSideProps(context) {
-  const data = await Checkauth(context.req.headers.cookie);    
-  
-  if(data.login == 'success'){
+  const data = await Checkauth(context.req.headers.cookie);
+
+  if (data.login == 'success') {
     return {
-      redirect:{
+      redirect: {
         destination: `/Compiler`,
         permanent: false
       }
@@ -28,7 +31,7 @@ export async function getServerSideProps(context) {
 
 
 export default function Login() {
-  
+
   const router = useRouter()
 
   const [Checkvalidmail, setCheckvalidmail] = useState(true);
@@ -36,6 +39,11 @@ export default function Login() {
 
   const [Usermail, setUsermail] = useState('');
   const [Upass, setUpass] = useState('');
+
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const Loading = (value) => {
+    setLoadingStatus(value)
+  }
 
   const handleChangeEmail = (e) => {
     setUsermail(e);
@@ -71,6 +79,9 @@ export default function Login() {
 
 
   const loginwithapi = async (e) => {
+
+    Loading(true)
+
     let jsondata = await JSON.stringify({
       "Email": Usermail.toString(),
       "Password": Upass.toString()
@@ -91,29 +102,36 @@ export default function Login() {
           e.preventDefault();
           // router.push("/");
           console.log(response.data);
-          if(response.data.result == 'success'){
+          if (response.data.result == 'success') {
+            // Loading(false)
             Swal.fire({
+              confirmButtonColor: '#0D6EFD',
               icon: 'success',
               title: 'SUCCESS',
-              text: 'Login Successfully',              
-            }).then(()=>{
+              text: 'Login Successfully',
+            }).then(() => {
               router.push('/Compiler')
             })
-          }else{
+          } else {
+            Loading(false)
             Swal.fire({
+              confirmButtonColor: '#0D6EFD',
               icon: 'error',
               title: 'Oops...',
-              text: 'Incorrect Password',              
+              text: 'Incorrect Password',
             })
           }
         }
       }).catch((err) => {
         console.log(err.response.data.error);
         // alert(err.response.data.error);
+
+        Loading(false)
         Swal.fire({
+          confirmButtonColor: '#0D6EFD',
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.error,              
+          text: err.response.data.error,
         })
       })
   }
@@ -147,7 +165,17 @@ export default function Login() {
             </div>
             {/* <input type="submit" className={`btn btn-primary login-btn`} name="submit" value="Login" /> */}
 
-            <button onClick={(e) => { handleLogin(e) }} className={`btn btn-primary login-btn`}>Login</button>
+            <div onClick={(e) => { handleLogin(e) }} className={`btn btn-primary login-btn`}
+              style={{
+                pointerEvents: `${loadingStatus ? 'none' : 'auto'}`,
+                opacity: `${loadingStatus ? '0.6' : '1'}`
+              }}
+            >
+              <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >Login</p>
+              <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}`  }} size={15} color='white' />
+            </div>
+
+
           </div>
           {/* </form> */}
         </div>
@@ -214,12 +242,16 @@ export default function Login() {
     border-color: blue;
 }
 
-.login-btn{
+.login-btn{    
+    position:relative;
     width: 90%;
+    height: 2.4rem;
     margin-top: 30px;
-
     margin-bottom: 20px;
     border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .invalid-field{
@@ -243,6 +275,7 @@ export default function Login() {
 .formtitle{
     margin-bottom: 2rem;
 }
+
 
 
     `}

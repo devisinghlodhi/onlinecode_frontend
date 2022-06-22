@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import absoluteUrl from 'next-absolute-url'
 import Checkauth from '../Modules/checkAuth';
-
+import { ThreeBounce } from 'better-react-spinkit';
 
 
 export async function getServerSideProps(context) {
@@ -44,6 +44,11 @@ export default function Forgotpassword({ currOrigin }) {
   const [Checkvalidmail, setCheckvalidmail] = useState(true);
   const [Usermail, setUsermail] = useState('');
 
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const Loading = (value) => {
+    setLoadingStatus(value)
+  }
+
   const handleChangeEmail = (e) => {
     setUsermail(e);
     let mail = e;
@@ -66,6 +71,7 @@ export default function Forgotpassword({ currOrigin }) {
   }
 
   const sendforgotlinkwithapi = async (e) => {
+    Loading(true);
     let jsondata = await JSON.stringify({
       "hosturl": `${currOrigin}/forgotpass`,
       "email": Usermail.toString(),
@@ -79,12 +85,14 @@ export default function Forgotpassword({ currOrigin }) {
       })
       .then((response) => {
         if (response.status == 200) {
+          
           console.log(response.data);
           e.preventDefault();
 
           if (response.data.status == 'success') {
-
+            Loading(false);
             Swal.fire({
+              confirmButtonColor: '#0D6EFD',
               icon: 'success',
               title: 'Link sent on Email',
               text: 'Forgot password link successfully sent on email, please check your email !!',
@@ -93,7 +101,9 @@ export default function Forgotpassword({ currOrigin }) {
             })
 
           } else {
+            Loading(false);
             Swal.fire({
+              confirmButtonColor: '#0D6EFD',
               icon: 'error',
               title: 'Oops...',
               text: "Something went wrong..!!",
@@ -104,7 +114,9 @@ export default function Forgotpassword({ currOrigin }) {
         }
       }).catch((err) => {
         console.log(err.response.data.message);
+        Loading(false);
         Swal.fire({
+          confirmButtonColor: '#0D6EFD',
           icon: 'error',
           title: 'Oops...',
           text: err.response.data.message,
@@ -134,7 +146,21 @@ export default function Forgotpassword({ currOrigin }) {
                 <a href="#">Login</a>
               </Link>
             </div>
-            <button onClick={(e) => { handleForgot(e) }} className={`btn btn-primary login-btn`}>Send Link on Email</button>
+            
+            <div onClick={(e) => { handleForgot(e) }} className={`btn btn-primary send-email-btn`}
+              style={{
+                pointerEvents: `${loadingStatus ? 'none' : 'auto'}`,
+                opacity: `${loadingStatus ? '0.6' : '1'}`
+              }}
+            >
+              <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >Send Link on Email</p>
+              <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}`  }} size={15} color='white' />
+
+            </div>
+
+
+
+
           </div>
           {/* </form> */}
         </div>
@@ -198,12 +224,16 @@ export default function Forgotpassword({ currOrigin }) {
     border-color: blue;
 }
 
-.login-btn{
+.send-email-btn{
+  position:relative;
     width: 90%;
+    height: 2.4rem;
     margin-top: 30px;
-
     margin-bottom: 20px;
     border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .invalid-field{

@@ -6,22 +6,22 @@ import Link from "next/link";
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2';
 import Checkauth from '../Modules/checkAuth';
-
+import { ThreeBounce } from 'better-react-spinkit';
 
 export async function getServerSideProps(context) {
-    const data = await Checkauth(context.req.headers.cookie);    
-    
-    if(data.login == 'success'){
-      return {
-        redirect:{
-          destination: `/Compiler`,
-          permanent: false
+    const data = await Checkauth(context.req.headers.cookie);
+
+    if (data.login == 'success') {
+        return {
+            redirect: {
+                destination: `/Compiler`,
+                permanent: false
+            }
         }
-      }
     }
-  
+
     return { props: { data } }
-  }
+}
 
 const Signup = () => {
 
@@ -39,7 +39,13 @@ const Signup = () => {
     const [Upass, setUpass] = useState('');
     const [Confirmpass, setConfirmpass] = useState('');
 
-    const handleChangeName = (e)=>{
+    const [loadingStatus, setLoadingStatus] = useState(false);
+    const Loading = (value) => {
+        setLoadingStatus(value)
+    }
+
+
+    const handleChangeName = (e) => {
         setUsername(e);
         let name = e;
         if (!name.match(/^[a-zA-Z \-]+$/)) {
@@ -52,7 +58,7 @@ const Signup = () => {
         }
     }
 
-    const handleChangePnumber = (e)=>{
+    const handleChangePnumber = (e) => {
         setPnumber(e);
         let num = e;
         if (!num.match(/^([0|\+[0-9]{1,5})?([5-9][0-9]{9})$/)) {
@@ -65,7 +71,7 @@ const Signup = () => {
         }
     }
 
-    const handleChangeEmail = (e)=>{
+    const handleChangeEmail = (e) => {
         setUsermail(e);
         let mail = e;
         if (!mail.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
@@ -78,7 +84,7 @@ const Signup = () => {
         }
     }
 
-    const handleChangePass = (e)=>{
+    const handleChangePass = (e) => {
         setUpass(e);
         let pass1 = e;
         if (!pass1.match(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/)) {
@@ -88,80 +94,89 @@ const Signup = () => {
         }
     }
 
-    const handleChangeconfirmpass=(e)=>{
+    const handleChangeconfirmpass = (e) => {
         setConfirmpass(e);
         let pass1 = Upass;
         let pass2 = e;
-        if((pass1==pass2) && pass2!=''){
+        if ((pass1 == pass2) && pass2 != '') {
             setCheckconfirmpass(true);
-        }else{
+        } else {
             setCheckconfirmpass(false);
         }
     }
 
 
-    const handleSubmit= async(e)=>{
+    const handleSubmit = async (e) => {
         await handleChangeName(Username);
         await handleChangePnumber(Pnumber);
         await handleChangeEmail(Usermail);
         await handleChangePass(Upass);
         await handleChangeconfirmpass(Confirmpass);
 
-        if(Username!="" && Checkname && Checknumber && Checkvalidmail && Checkvalidpass && Checkconfirmpass){
+        if (Username != "" && Checkname && Checknumber && Checkvalidmail && Checkvalidpass && Checkconfirmpass) {
             senddatatoapi(e);
         }
     }
 
-    const senddatatoapi= async(e)=>{
+    const senddatatoapi = async (e) => {
+        Loading(true);
 
         let jsondata = await JSON.stringify({
-                "userName":Username.toString(),
-                "MobileNo":Pnumber.toString(),
-                "Email":Usermail.toString(),
-                "Password":Upass.toString()
+            "userName": Username.toString(),
+            "MobileNo": Pnumber.toString(),
+            "Email": Usermail.toString(),
+            "Password": Upass.toString()
         })
 
-       await Axios.post(`${nextConfig.REST_API_URL}/createaccount`, jsondata , 
-        {headers: {
-            // Overwrite Axios's automatically set Content-Type
-            'Content-Type': 'application/json'
-          }})
-          
-          .then((response)=>{
-            if (response.status==200) {
-                let result = response;
-                console.log(result.data.result);
-                // alert(result.data.message);
-                e.preventDefault();
+        await Axios.post(`${nextConfig.REST_API_URL}/createaccount`, jsondata,
+            {
+                headers: {
+                    // Overwrite Axios's automatically set Content-Type
+                    'Content-Type': 'application/json'
+                }
+            })
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'SUCCESS',
-                    text: 'User successfully sign up',              
-                  }).then(()=>{
-                      router.push("/Login");
-                  })
+            .then((response) => {
+                if (response.status == 200) {
+                    let result = response;
+                    console.log(result.data.result);
+                    // alert(result.data.message);
+                    e.preventDefault();
 
-               } else {
-                console.log("http error : ", response.data)
+                    Swal.fire({
+                        confirmButtonColor: '#0D6EFD',
+                        icon: 'success',
+                        title: 'SUCCESS',
+                        text: 'User successfully sign up',
+                    }).then(() => {
+                        router.push("/Login");
+                    })
+
+                } else {
+                    console.log("http error : ", response.data)
+                    Loading(false);
+                    Swal.fire({
+                        confirmButtonColor: '#0D6EFD',
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.data,
+                    })
+                }
+
+
+            }).catch((err) => {
+                console.log(err.response.data.error);
+                //   alert(err.response.data.error);
+
+                Loading(false);
                 Swal.fire({
+                    confirmButtonColor: '#0D6EFD',
                     icon: 'error',
                     title: 'Oops...',
-                    text: response.data,              
-                  })
-            }
+                    text: err.response.data.error,
+                })
+            });
 
-
-          }).catch((err)=>{
-              console.log(err.response.data.error);
-            //   alert(err.response.data.error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: err.response.data.error,              
-              })
-          });
-         
     }
 
 
@@ -173,44 +188,58 @@ const Signup = () => {
 
                     {/* <form method="POST" className="reg-form" id="container"> */}
                     <div className="reg-form" id="container">
-                        
+
                         <h2>Create Account</h2>
 
                         <div className="input-fields">
-                            <input type="text" value={Username} onChange={(e)=>{handleChangeName(e.target.value)}} onBlur={(e)=>{handleChangeName(e.target.value)}} className="name inputbox" placeholder="Enter your name" required />
+                            <input type="text" value={Username} onChange={(e) => { handleChangeName(e.target.value) }} onBlur={(e) => { handleChangeName(e.target.value) }} className="name inputbox" placeholder="Enter your name" required />
                             {!Checkname ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="number" value={Pnumber} onChange={(e)=>{handleChangePnumber(e.target.value)}} onBlur={(e)=>{handleChangePnumber(e.target.value)}} className="pnumber inputbox"
+                            <input type="number" value={Pnumber} onChange={(e) => { handleChangePnumber(e.target.value) }} onBlur={(e) => { handleChangePnumber(e.target.value) }} className="pnumber inputbox"
                                 placeholder="Enter you phone number" required />
                             {!Checknumber ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="email" value={Usermail} onChange={(e)=>{handleChangeEmail(e.target.value)}} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
+                            <input type="email" value={Usermail} onChange={(e) => { handleChangeEmail(e.target.value) }} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
                                 required />
 
                             {!Checkvalidmail ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" value={Upass} onChange={(e)=>{handleChangePass(e.target.value)}} onBlur={(e)=>handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
+                            <input type="password" value={Upass} onChange={(e) => { handleChangePass(e.target.value) }} onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
                             <div className="invalid-field"></div>
                             {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" value={Confirmpass} onChange={(e)=>{handleChangeconfirmpass(e.target.value)}} onBlur={(e)=>handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
+                            <input type="password" value={Confirmpass} onChange={(e) => { handleChangeconfirmpass(e.target.value) }} onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
                                 required />
                             {!Checkconfirmpass ? (<div className="invalid-field">Password Does not match, Please Try again..!!</div>) : null}
 
                         </div>
 
                         {/* <input onClick={handleSubmit} type="submit" className="btn btn-primary reg-btn" name="submit" value="Sign up" /> */}
-                        <button onClick={(e)=>{handleSubmit(e)}} className="btn btn-primary reg-btn">Sign up</button>
-                    
+
+                        <div onClick={(e) => { handleSubmit(e) }} className={`btn btn-primary reg-btn`}
+                            style={{
+                                pointerEvents: `${loadingStatus ? 'none' : 'auto'}`,
+                                opacity: `${loadingStatus ? '0.6' : '1'}`
+                            }}
+                        >
+                            <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >Sign up</p>
+                            
+                            <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}`  }} size={15} color='white' />
+                            
+                            {/* <div class="spinner-border text-light" style={{ display: `${loadingStatus ? 'flex' : 'none'}`, height: '1.5rem', width: '1.5rem', position: 'absolute' }} role="status"></div> */}
+
                         </div>
+
+
+                    </div>
 
                     {/* </form> */}
 
@@ -278,10 +307,15 @@ const stylesheet = css`
 }
 
 .reg-btn{
+    position:relative;
     width: 90%;
+    height: 2.4rem;
     margin-top: 30px;
     margin-bottom: 20px;
     border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .invalid-field{
