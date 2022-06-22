@@ -75,6 +75,10 @@ export default async function middleware(req) {
     //     }
     // }
 
+     if (url.includes('/Expirelink')) {
+            const { pathname, origin } = req.nextUrl                               
+            return NextResponse.redirect(`${origin}/Login`);
+    }
 
 }
 
