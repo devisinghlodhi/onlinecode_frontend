@@ -6,8 +6,6 @@ import Axios from "axios";
 import Swal from 'sweetalert2';
 import Checkauth from '../../Modules/checkAuth';
 import { ThreeBounce } from 'better-react-spinkit';
-import { NextRequest } from 'next/server';
-import { NextResponse } from "next/server";
 import absoluteUrl from 'next-absolute-url';
 import Link from "next/link";
 
