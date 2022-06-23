@@ -98,7 +98,7 @@ const Signup = () => {
         setConfirmpass(e);
         let pass1 = Upass;
         let pass2 = e;
-        if ((pass1 == pass2) && pass2 != '') {
+        if ((pass1 == pass2)) {
             setCheckconfirmpass(true);
         } else {
             setCheckconfirmpass(false);
@@ -192,31 +192,31 @@ const Signup = () => {
                         <h2>Create Account</h2>
 
                         <div className="input-fields">
-                            <input type="text"  onBlur={(e) => { handleChangeName(e.target.value) }} className="name inputbox" placeholder="Enter your name" required />
+                            <input type="text" onChange={(e)=>setUsername(e.target.value)}  onBlur={(e) => { handleChangeName(e.target.value) }} className="name inputbox" placeholder="Enter your name" required />
                             {!Checkname ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="number"  onBlur={(e) => { handleChangePnumber(e.target.value) }} className="pnumber inputbox"
+                            <input type="number" onChange={(e)=>setPnumber(e.target.value)}  onBlur={(e) => { handleChangePnumber(e.target.value) }} className="pnumber inputbox"
                                 placeholder="Enter you phone number" required />
                             {!Checknumber ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="email"  onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
+                            <input type="email" onChange={(e)=>setUsermail(e.target.value)}  onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter your email id"
                                 required />
 
                             {!Checkvalidmail ? (<div className="invalid-field">Invalid value</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
+                            <input type="password" onChange={(e)=>setUpass(e.target.value)} onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder="Create new password" required />
                             <div className="invalid-field"></div>
                             {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password" onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
+                            <input type="password" onChange={(e)=>setConfirmpass(e.target.value)} onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
                                 required />
                             {!Checkconfirmpass ? (<div className="invalid-field">Password Does not match, Please Try again..!!</div>) : null}
 

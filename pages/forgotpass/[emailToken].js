@@ -80,7 +80,7 @@ const EmailToken = ({data}) => {
         setConfirmpass(e);
         let pass1 = Upass;
         let pass2 = e;
-        if ((pass1 == pass2) && pass2 != '') {
+        if ((pass1 == pass2)) {
             setCheckconfirmpass(true);
         } else {
             setCheckconfirmpass(false);
@@ -173,13 +173,13 @@ const EmailToken = ({data}) => {
                         <h2>Create new Password</h2>
 
                         <div className="input-fields">
-                            <input type="password"  onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
+                            <input type="password" onChange={(e)=>setUpass(e.target.value)}  onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder=" Create new password" required />
                             <div className="invalid-field"></div>
                             {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
-                            <input type="password"  onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
+                            <input type="password" onChange={(e)=>setConfirmpass(e.target.value)}  onBlur={(e) => handleChangeconfirmpass(e.target.value)} className="c-password inputbox" placeholder="Confirm password"
                                 required />
                             {!Checkconfirmpass ? (<div className="invalid-field">Password Does not match, Please Try again..!!</div>) : null}
                         </div>

@@ -18,7 +18,7 @@ int main()
 
 `,
 
-python : 
+py : 
 `# This is Demo Code for example
 
 # program for factorial of number

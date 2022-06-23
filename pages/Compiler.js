@@ -51,11 +51,14 @@ function Compiler({ data }) {
   const [Code, setCode] = useState("");
   const [Language, setLanguage] = useState("cpp");
   const [Emode, setEmode] = useState("c_cpp");
+  const [preLang, setPreLang] = useState('cpp');
 
   const [Jobstatus, setJobstatus] = useState("");
   const [Joboutput, setJoboutput] = useState("");
 
   const [loadingStatus, setLoadingStatus] = useState(false);
+
+
   const Loading = (value) => {
     setLoadingStatus(value)
   }
@@ -174,14 +177,26 @@ function Compiler({ data }) {
   }
 
 
-  const handleChangeLanguage = (langName) => {
+  const handleChangeLanguage = async (langName) => {
+
+    let oldcodedata = await localStorage.getItem("Codeexample");
+    oldcodedata = await JSON.parse(oldcodedata);
+    oldcodedata[`${preLang}`] = Code;
+
+    localStorage.setItem("Codeexample" , JSON.stringify(oldcodedata));
+    
     setLanguage(langName); // Change language for send the type of language for server    
-    if (langName == 'cpp') {  // Change editor template mode
+    setPreLang(langName);
+
+    let codedata = await localStorage.getItem("Codeexample");
+    codedata = await JSON.parse(codedata);
+
+    if (langName == 'cpp') {  // Change editor template mode and set default code from local storage
       setEmode('c_cpp')
-      setCode(Codeexample.cpp);
+      setCode(codedata.cpp);
     } else if (langName == 'py') {
       setEmode('python')
-      setCode(Codeexample.python);
+      setCode(codedata.py);
     } else if (langName == 'java') {
       setEmode('java')
     } else if (langName == 'js') {
@@ -191,9 +206,10 @@ function Compiler({ data }) {
     }
   }
 
-  const handleOnload = () => {
+  const handleOnload = async() => {
     console.log("this is onload");
     setCode(Codeexample.cpp);
+    localStorage.setItem("Codeexample" , JSON.stringify(Codeexample));
   }
 
   return (
