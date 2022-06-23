@@ -134,7 +134,7 @@ export default function Forgotpassword({ currOrigin }) {
             <h2 className="formtitle">Forgot Password</h2>
 
             <div className="input-fields">
-              <input type="email"  onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
+              <input type="email" onChange={(e)=>setUsermail(e.target.value)} onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
               </input>
               {!Checkvalidmail ? (<div className="invalid-field">Invalid email</div>) : null}
             </div>

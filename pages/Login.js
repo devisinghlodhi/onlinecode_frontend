@@ -146,13 +146,13 @@ export default function Login() {
             <h2 className="formtitle">Login Page</h2>
 
             <div className="input-fields">
-              <input type="email"  onBlur={(e) => { handleChangeEmail(e.target.value) }} className="email inputbox" placeholder="Enter Your Email id" required>
+              <input type="email" onChange={(e)=>setUsermail(e.target.value)} onBlur={(e) => { handleChangeEmail(e.target.value) }}  className="email inputbox" placeholder="Enter Your Email id" required>
               </input>
               {!Checkvalidmail ? (<div className="invalid-field">Invalid email</div>) : null}
             </div>
 
             <div className="input-fields">
-              <input type="password"  onBlur={(e) => { handleChangePass(e.target.value) }} className="password inputbox" placeholder="Enter Your Password" required>
+              <input type="password" onChange={(e)=>setUpass(e.target.value)}  onBlur={(e) => { handleChangePass(e.target.value) }} className="password inputbox" placeholder="Enter Your Password" required>
               </input>
               {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
             </div>
