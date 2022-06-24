@@ -212,7 +212,7 @@ const Signup = () => {
                         <div className="input-fields">
                             <input type="password" onChange={(e)=>setUpass(e.target.value)} onBlur={(e) => handleChangePass(e.target.value)} className="password inputbox" placeholder="Create new password" required />
                             <div className="invalid-field"></div>
-                            {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atlead - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
+                            {!Checkvalidpass ? (<div className="invalid-field">Password should be contain atleast - one alphabate character, one Digit and one symbol and length minimum 8 character.</div>) : null}
                         </div>
 
                         <div className="input-fields">
