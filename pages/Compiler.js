@@ -239,8 +239,10 @@ function Compiler({ data }) {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span style={{ fontWeight: '700', fontSize: 14 }}>Select Language:</span>
                 <select className='selectBtn' style={styles.languageSelector} value={Language} onChange={(e) => handleChangeLanguage(e.target.value)}>
-                  <option value="cpp">C++</option>
+                  <option value="cpp">C/C++</option>
                   <option value="py">Python</option>
+                  <option value="java">Java</option>
+                  <option value="js">JavaScript</option>
                 </select>
               </div>
               {/* <button className="btn btn-light coderunbtn" style={styles.runbtn} onClick={handleSubmit}>RUN</button> */}
