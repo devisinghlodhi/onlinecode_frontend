@@ -14,9 +14,7 @@ import { ThreeBounce } from 'better-react-spinkit';
 export async function getServerSideProps(context) {
   const data = await Checkauth(context.req.headers.cookie);
 
-  
-
-
+  console.log(data);
   if (data.login == 'success') {
     return {
       redirect: {
@@ -24,7 +22,7 @@ export async function getServerSideProps(context) {
         permanent: false
       }
     }
-  }
+  } 
 
   return { props: { data } }
 }

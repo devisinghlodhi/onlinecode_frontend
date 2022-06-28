@@ -21,7 +21,7 @@ import { ThreeBounce } from 'better-react-spinkit';
 export async function getServerSideProps(context) {
   const data = await Checkauth(context.req.headers.cookie);
 
-  // console.log(data)
+  console.log("data is : ", data)
 
   if (data.login != 'success') {
     return {
@@ -182,7 +182,6 @@ function Compiler({ data }) {
     let oldcodedata = await localStorage.getItem("Codeexample");
     oldcodedata = await JSON.parse(oldcodedata);
     oldcodedata[`${preLang}`] = Code;
-
     localStorage.setItem("Codeexample" , JSON.stringify(oldcodedata));
     
     setLanguage(langName); // Change language for send the type of language for server    
@@ -199,8 +198,10 @@ function Compiler({ data }) {
       setCode(codedata.py);
     } else if (langName == 'java') {
       setEmode('java')
+      setCode(codedata.java);
     } else if (langName == 'js') {
       setEmode('javascript')
+      setCode(codedata.js);
     } else {
       setEmode('text')
     }
@@ -243,6 +244,12 @@ function Compiler({ data }) {
                   <option value="py">Python</option>
                   <option value="java">Java</option>
                   <option value="js">JavaScript</option>
+                  <option value="go">Go</option>
+                  <option value="cs">C#</option>
+                  <option value="r">R</option>
+                  <option value="rb">Ruby</option>
+                  <option value="kt">Kotlin</option>
+                  <option value="swift">Swift</option>
                 </select>
               </div>
               {/* <button className="btn btn-light coderunbtn" style={styles.runbtn} onClick={handleSubmit}>RUN</button> */}
@@ -303,6 +310,7 @@ function Compiler({ data }) {
                         enableSnippets: false,
                         showLineNumbers: true,
                         tabSize: 2,
+                        useWorker: false,
                       }} />
                   </div>
 

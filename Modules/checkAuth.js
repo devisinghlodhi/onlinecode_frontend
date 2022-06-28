@@ -22,7 +22,7 @@ const Checkauth = async (contextcookie) => {
       token: jwt
     })
 
-    console.log(token)
+    console.log(codedata)
 
     // try {        
     //   const response = await Axios.post(`${nextConfig.REST_API_URL}/alreadylogincheck`, codedata,
@@ -50,11 +50,15 @@ const Checkauth = async (contextcookie) => {
       const response = await fetch(`${nextConfig.REST_API_URL}/alreadylogincheck`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Accept: 'application/json, text/plain, */*',
+        'User-Agent': '*',
         },
         body: codedata
       });
 
+      // console.log("serverside DATA : ", response )
+      // data = { login: "failed", error: "main error" };
       let response_data = await response.json();
 
       if (response_data.status == 'success') {
@@ -64,7 +68,7 @@ const Checkauth = async (contextcookie) => {
       }
 
     } catch (error) {
-      // console.log("api error:", error)
+      console.log("api error:", error)
       data = { login: "failed", error: error };
     }
 
