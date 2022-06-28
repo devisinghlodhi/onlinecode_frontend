@@ -40,6 +40,19 @@ print("Factorial of",num,"is", factorial(num))
 `,
 
 
+
+java : 
+`# This is Demo Code for example
+
+`,
+
+js : 
+`// This is Demo Code for example
+
+console.log("hii javascript")
+`,
+
+
 }
 
 module.exports = Codeexample;
