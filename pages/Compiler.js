@@ -193,16 +193,49 @@ function Compiler({ data }) {
     if (langName == 'cpp') {  // Change editor template mode and set default code from local storage
       setEmode('c_cpp')
       setCode(codedata.cpp);
-    } else if (langName == 'py') {
+    } 
+    else if (langName == 'py') {
       setEmode('python')
       setCode(codedata.py);
-    } else if (langName == 'java') {
+    } 
+    else if (langName == 'java') {
       setEmode('java')
       setCode(codedata.java);
-    } else if (langName == 'js') {
+    } 
+    else if (langName == 'js') {
       setEmode('javascript')
       setCode(codedata.js);
-    } else {
+    } 
+    else if (langName == 'go') {
+      setEmode('golang')
+      setCode(codedata.go);
+    } 
+    else if (langName == 'cs') {
+      setEmode('csharp')
+      setCode(codedata.go);
+    } 
+    else if (langName == 'r') {
+      setEmode('r')
+      setCode(codedata.go);
+    }
+    else if (langName == 'rb') {
+      setEmode('ruby')
+      setCode(codedata.go);
+    }
+    else if (langName == 'kt') {
+      setEmode('kotlin')
+      setCode(codedata.go);
+    }
+    else if (langName == 'php') {
+      setEmode('php')
+      setCode(codedata.go);
+    }
+    else if (langName == 'swift') {
+      setEmode('swift')
+      setCode(codedata.go);
+    }
+
+    else {
       setEmode('text')
     }
   }
@@ -249,6 +282,7 @@ function Compiler({ data }) {
                   <option value="r">R</option>
                   <option value="rb">Ruby</option>
                   <option value="kt">Kotlin</option>
+                  <option value="php">Php</option>
                   <option value="swift">Swift</option>
                 </select>
               </div>

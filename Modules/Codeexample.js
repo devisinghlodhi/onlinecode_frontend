@@ -42,7 +42,13 @@ print("Factorial of",num,"is", factorial(num))
 
 
 java : 
-`# This is Demo Code for example
+`// This is Demo Code for example
+
+class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!"); 
+    }
+}
 
 `,
 
@@ -51,6 +57,21 @@ js :
 
 console.log("hii javascript")
 `,
+
+go : 
+`// This is Demo Code for example
+
+package main
+import "fmt"
+  
+func main() {
+  
+    fmt.Println("!... Hello World ...!")
+}
+
+`,
+
+
 
 
 }
