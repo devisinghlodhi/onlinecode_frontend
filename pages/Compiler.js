@@ -216,11 +216,11 @@ function Compiler({ data }) {
     } 
     else if (langName == 'r') {
       setEmode('r')
-      setCode(codedata.go);
+      setCode(codedata.r);
     }
     else if (langName == 'rb') {
       setEmode('ruby')
-      setCode(codedata.go);
+      setCode(codedata.rb);
     }
     else if (langName == 'kt') {
       setEmode('kotlin')
@@ -228,7 +228,7 @@ function Compiler({ data }) {
     }
     else if (langName == 'php') {
       setEmode('php')
-      setCode(codedata.go);
+      setCode(codedata.php);
     }
     else if (langName == 'swift') {
       setEmode('swift')

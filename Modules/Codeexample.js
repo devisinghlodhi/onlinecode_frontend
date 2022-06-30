@@ -71,6 +71,37 @@ func main() {
 
 `,
 
+r : 
+`# This is Demo Code for example
+
+# My first program in R Programming
+
+myString <- "Hello, World!"
+print(myString, quote=FALSE)
+
+`,
+
+rb : 
+`# This is Demo Code for example
+
+# My first program in Ruby Programming
+
+puts "Hello Ruby !"  
+
+`,
+
+php : 
+`<?php
+//  This is Demo Code for example
+
+//  My first program in PHP Programming
+
+echo "Hello World! , this is php program.";
+
+
+?>
+`,
+
 
 
 
