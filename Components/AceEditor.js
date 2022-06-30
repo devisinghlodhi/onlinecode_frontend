@@ -9,7 +9,14 @@ const AceEditor = dynamic(
         require('ace-builds/src-noconflict/mode-java');
         require('ace-builds/src-noconflict/mode-python');
         require('ace-builds/src-noconflict/mode-javascript');
+        require('ace-builds/src-noconflict/mode-golang');
+        require('ace-builds/src-noconflict/mode-csharp');
+        require('ace-builds/src-noconflict/mode-r');
+        require('ace-builds/src-noconflict/mode-ruby');
+        require('ace-builds/src-noconflict/mode-kotlin');
         require('ace-builds/src-noconflict/mode-php');
+        require('ace-builds/src-noconflict/mode-swift');
+
         require('ace-builds/src-noconflict/mode-css');
         require('ace-builds/src-noconflict/mode-html');
 
