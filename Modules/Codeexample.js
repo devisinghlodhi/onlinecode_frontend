@@ -12,7 +12,7 @@ using namespace std;
 // simple hello world program
 int main()
 {
-    cout<<"Hello World !!";
+    cout<<"Hello World , This is C++ Code..!!";
     return 0;
 }        
 
@@ -46,7 +46,7 @@ java :
 
 class HelloWorld {
     public static void main(String[] args) {
-        System.out.println("Hello, World!"); 
+        System.out.println("Hello, World!, This is JAVA Code."); 
     }
 }
 
@@ -66,17 +66,31 @@ import "fmt"
   
 func main() {
   
-    fmt.Println("!... Hello World ...!")
+    fmt.Println("!... Hello World ...GO...!")
 }
 
 `,
+
+cs : 
+`// This is Demo Code for example
+
+class First
+{
+    public static void Main()
+    {
+        System.Console.WriteLine("Good Day! , This is C# Code. ");
+    }
+}
+
+`,
+
 
 r : 
 `# This is Demo Code for example
 
 # My first program in R Programming
 
-myString <- "Hello, World!"
+myString <- "Hello, World!, This is R code."
 print(myString, quote=FALSE)
 
 `,
@@ -100,6 +114,19 @@ echo "Hello World! , this is php program.";
 
 
 ?>
+`,
+
+swift : 
+`
+//  This is Demo Code for example
+
+func greet() {
+    print("Hello World!, This is Swift Code.")
+}
+
+// call the function
+greet()
+
 `,
 
 
