@@ -212,7 +212,7 @@ function Compiler({ data }) {
     } 
     else if (langName == 'cs') {
       setEmode('csharp')
-      setCode(codedata.go);
+      setCode(codedata.cs);
     } 
     else if (langName == 'r') {
       setEmode('r')
@@ -232,7 +232,7 @@ function Compiler({ data }) {
     }
     else if (langName == 'swift') {
       setEmode('swift')
-      setCode(codedata.go);
+      setCode(codedata.swift);
     }
 
     else {
