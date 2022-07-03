@@ -224,7 +224,7 @@ function Compiler({ data }) {
     }
     else if (langName == 'kt') {
       setEmode('kotlin')
-      setCode(codedata.go);
+      setCode(codedata.kt);
     }
     else if (langName == 'php') {
       setEmode('php')

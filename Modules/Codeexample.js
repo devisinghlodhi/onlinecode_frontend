@@ -104,6 +104,15 @@ puts "Hello Ruby !"
 
 `,
 
+kt : 
+`// This is Demo Code for example
+
+fun main() {
+    println("Hello, World!, This is KOTLIN Code..!!")
+} 
+
+`,
+
 php : 
 `<?php
 //  This is Demo Code for example
