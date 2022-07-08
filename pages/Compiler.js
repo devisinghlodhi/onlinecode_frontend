@@ -308,6 +308,8 @@ function Compiler({ data }) {
 
                 }}
               >
+
+                {/* <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >RUN</p> */}
                 <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >RUN</p>
                 <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}` }} size={10} color='darkblue' />
               </div>
@@ -511,6 +513,9 @@ const stylesheet = css`
   transition: background-color 0.5s ease;
 }
 
+.coderunbtn{
+  min-height: 1.9rem;
+}
 
 
  #main{   
