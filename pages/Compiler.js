@@ -281,13 +281,15 @@ function Compiler({ data }) {
                   <option value="cs">C#</option>
                   <option value="r">R</option>
                   <option value="rb">Ruby</option>
-                  <option value="kt">Kotlin</option>
+                  {/* <option value="kt">Kotlin</option> */}                  
                   <option value="php">Php</option>
-                  <option value="swift">Swift</option>
-                </select>
-              </div>
+                  {/* <option value="swift">Swift</option> */}
+                                    
+                  </select>
+                  </div>
               {/* <button className="btn btn-light coderunbtn" style={styles.runbtn} onClick={handleSubmit}>RUN</button> */}
 
+              <div style={{ display: 'flex', alignItems: 'center' }}>
               <div onClick={(e) => { handleSubmit(e) }} className={`btn btn-light coderunbtn`}
                 style={{
                   pointerEvents: `${loadingStatus ? 'none' : 'auto'}`,
@@ -308,6 +310,7 @@ function Compiler({ data }) {
               >
                 <p style={{ margin: 0, display: `${loadingStatus ? 'none' : 'flex'}` }}  >RUN</p>
                 <ThreeBounce style={{ display: `${loadingStatus ? 'flex' : 'none'}` }} size={10} color='darkblue' />
+              </div>
               </div>
 
 
@@ -464,7 +467,7 @@ var styles = {
   },
   editortopouter: {
     display: 'flex',
-    margin: "15px 15px 10px 15px",
+    margin: "15px 6px 10px 6px",
   },
   languageSelector: {
     marginLeft: 10,
@@ -553,6 +556,7 @@ const stylesheet = css`
 
 #myContainer{
   padding: 0px 30px 20px 30px;
+  padding: 0px 15px 20px 15px;
 }
 
 `
